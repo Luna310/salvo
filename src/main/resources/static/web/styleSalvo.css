@@ -1,0 +1,30 @@
+.shipLocation{
+    background-color: blue;
+}
+
+.locationSalvo{
+    background-color: pink;
+}
+
+#table1{
+    text-align: center;
+}
+
+#tableSalvo {
+    text-align: center;
+}
+
+#infoPlayers{
+    text-align: center;
+}
+
+.locationSalvoOpponent{
+    background-color: orange;
+}
+.hit{
+    background-color: darkmagenta;
+}
+
+.h1Tittle{
+    text-align: center;
+}
