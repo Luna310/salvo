@@ -201,11 +201,30 @@ function getParameterByName(name) {
 }
 
 function showInfoPlayer(){
+    var name1="";
+    var name2="";
+
+    if(idGp == data.game.gamePlayers[0].id && data.game.gamePlayers[1]!=null){
+        console.log("entra")
+    name1=data.game.gamePlayers[0].player.email;
+    name2=data.game.gamePlayers[1].player.email;
+    }
+    else if(idGp != data.game.gamePlayers[0].id){
+        console.log("entra2")
+        name1=data.game.gamePlayers[1].player.email;
+        name2=data.game.gamePlayers[0].player.email;
+    }
+    else if(data.game.gamePlayers[1]==null){
+        name1=data.game.gamePlayers[0].player.email;
+        name2= " Waitting an opponent";
+    }
+console.log(name1);
+console.log(name2);
+console.log(data.game.gamePlayers[0].player.email);
     var newH2=document.createElement("h2");
     document.getElementById("infoPlayers").appendChild(newH2);
-    if( dataGamePlayer[1] == null){
-        newH2.innerHTML = dataGamePlayer[0].player.email + " Waiting a opponent"
-    }else {newH2.innerHTML = dataGamePlayer[0].player.email + " VS " + dataGamePlayer[1].player.email;}
+    newH2.innerHTML = name1 + " VS " + name2
+
 }
 
 getData();

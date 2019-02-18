@@ -62,7 +62,7 @@ var data;
 
 
 
-        for(var i=0 ; i < arrayThead.length ; i++){
+        for(var i=0 ; i < data.leaderBoard.length ; i++){
             if(data.leaderBoard[i].player!="") {
             var newTr1 = document.createElement("tr");
 
@@ -90,5 +90,31 @@ var data;
         }
     }
 
+
+    function logIn(){
+        var userName=document.getElementById("inputName").value;
+        var pwd=document.getElementById("inputpwd").value;
+
+
+        fetch("/api/login", {
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            method: 'POST',
+            body: 'name='+ userName + '&password='+ pwd,
+        })
+            .then(function (data) {
+                console.log('Request success: ', data);
+
+
+            }).then(function () {
+
+        })
+            .catch(function (error) {
+                console.log('Request failure: ', error);
+            });
+        console.log("entra in")
+    }
 
 getData();

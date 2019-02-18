@@ -16,6 +16,8 @@ public class Player {
 
     private String user;
 
+    private String password;
+
     @OneToMany(mappedBy="player", fetch=FetchType.EAGER)
     Set<GamePlayer> gamePlayers = new HashSet<>();
 
@@ -25,9 +27,10 @@ public class Player {
     public Player() {
     }
 
-    public Player(String email) {
+    public Player(String email,String password) {
 
         this.user=email;
+        this.password=password;
     }
 
     public Set<GamePlayer> getGamePlayers() {
@@ -79,5 +82,14 @@ public class Player {
     public List<Game> getGames(){
         return this.gamePlayers.stream().map(gp -> gp.getGame()).collect(Collectors.toList());
     }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    
 
 }

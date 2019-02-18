@@ -6,7 +6,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <link href="styleSalvo.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="styleSalvo.css">
     <meta charset="UTF-8">
     <title>BattleShip</title>
 </head>
@@ -25,5 +25,19 @@
 </div>
 
 <script src="main.js"></script>
+
+<div>
+    <form id="login-form" onsubmit="return false">
+        <div>Name: <input id="inputName" type="text" name="username"></div>
+        <label>Password: <input id="inputpwd" type="text" name="password"></label>
+
+    </form>
+    <button onclick="logIn()">Log In</button>
+
+    <form id="logout-form" onsubmit="return false">
+        <button>Log out</button>
+    </form>
+</div>
+
 </body>
 </html>

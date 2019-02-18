@@ -1,10 +1,26 @@
 package com.codeoftheweb.salvo;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configurers.GlobalAuthenticationConfigurerAdapter;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.web.WebAttributes;
+import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.*;
 
 @SpringBootApplication
@@ -20,10 +36,10 @@ public class SalvoApplication {
 									  GameRepository gameRepository, GamePlayerRepository gamePlayerRepository,
 									  ShipRepository shipRepository, SalvoRepository salvoRepository, ScoreRepository scoreRepository) {
 		return (args) -> {
-			Player player1 = new Player("j.bauer@ctu.gov");
-			Player player2 = new Player("c.obrian@ctu.gov");
-			Player player3 = new Player("kim_bauer@gmail.com");
-			Player player4 = new Player("t.almeida@ctu.gov");
+			Player player1 = new Player("j.bauer@ctu.gov","24");
+			Player player2 = new Player("c.obrian@ctu.gov","42");
+			Player player3 = new Player("kim_bauer@gmail.com","kb");
+			Player player4 = new Player("t.almeida@ctu.gov","mole");
 			System.out.print(player1.getUser());
 
 
@@ -99,7 +115,7 @@ public class SalvoApplication {
 			Ship ship4=new Ship("Destroyer",location4);
 
 
-			List<String> location5 = Arrays.asList("B4","B5");
+			List<String> location5 = Arrays.asList("F1","F2");
 			Ship ship5=new Ship("Patrol Boat",location5);
 
 
@@ -363,8 +379,82 @@ public class SalvoApplication {
 	}
 }
 
-//	Player player1 = new Player("j.bauer@ctu.gov");
-//	Player player2 = new Player("c.obrian@ctu.gov");
-//	Player player3 = new Player("kim_bauer@gmail.com");
-//	Player player4 = new Player("t.almeida@ctu.gov");
 
+
+@Configuration
+class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
+
+	@Autowired
+	PlayerRepository playerRepository;
+
+	@Override
+	public void init(AuthenticationManagerBuilder auth) throws Exception{
+		/*inputUserName es el parametro que coge el valor del email y que buscara nuestro player en el repositorio , si
+		lo encontramos, creamos y devolvemos un   objeto org.springframework.security.core.userdetails.User ,con el
+		nombre de usuario almacenado, la contraseña almacenada para ese usuario , y el rol o roles que tiene el usuario.*/
+		auth.userDetailsService(inputUserName->{
+			Player player = playerRepository.findByUser(inputUserName);
+			if (player != null) {
+				return new User(player.getUser(), player.getPassword(),
+						//Aqui marcamos el tipo de roles que tendremos
+						AuthorityUtils.createAuthorityList("USER","ADMIN"));
+			} else {
+				throw new UsernameNotFoundException("Unknown user: " + inputUserName);
+			}
+		});
+	}
+}
+
+	/*utiliza la autenticación basada en formularios, con reglas que permiten que solo los usuarios Admin accedan
+	a las URL de "admin".*/
+@EnableWebSecurity
+@Configuration
+class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		//Aqui comienzan las autorizaciones.
+		http.authorizeRequests()
+				.antMatchers("/web/games.html").permitAll()
+				.antMatchers("/web/main.js").permitAll()
+				.antMatchers("/web/styleSalvo.css").permitAll()
+				.antMatchers("/api/games").permitAll()
+				/*para acceder a cualquier URL que comience con "/ api", el usuario debe tener el rol ADMIN*/
+				.antMatchers("/api/**").hasAuthority("ADMIN")
+				//para acceder a cualquier otra URL, solo necesita iniciar sesión con un rol de USER
+				.antMatchers("/**").hasAuthority("USER")
+				//.antMatchers("/api/game_view/{gamePlayerId}").hasAuthority("PLAYER")
+				.and()
+				//formLogin () dice que se use el inicio de sesión basado en formulario
+				.formLogin()
+				.usernameParameter("name")
+				.passwordParameter("password")
+				.loginPage("/api/login");
+
+				http.logout().logoutUrl("/api/logout");
+
+		// turn off checking for CSRF tokens
+		http.csrf().disable();
+
+		// if user is not authenticated, just send an authentication failure response
+		http.exceptionHandling().authenticationEntryPoint((req, res, exc) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED));
+
+		// if login is successful, just clear the flags asking for authentication
+		http.formLogin().successHandler((req, res, auth) -> clearAuthenticationAttributes(req));
+
+		// if login fails, just send an authentication failure response
+		http.formLogin().failureHandler((req, res, exc) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED));
+
+		// if logout is successful, just send a success response
+		http.logout().logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler());
+	}
+
+		private void clearAuthenticationAttributes(HttpServletRequest request) {
+			HttpSession session = request.getSession(false);
+			if (session != null) {
+				session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+			}
+
+	}
+
+}
