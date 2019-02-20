@@ -27,9 +27,9 @@ public class Player {
     public Player() {
     }
 
-    public Player(String email,String password) {
+    public Player(String user,String password) {
 
-        this.user=email;
+        this.user=user;
         this.password=password;
     }
 

@@ -91,17 +91,18 @@ var data;
     }
 
 
-    function logIn(){
+    function logIn_out(url){
         var userName=document.getElementById("inputName").value;
         var pwd=document.getElementById("inputpwd").value;
 
-
-        fetch("/api/login", {
+        if(url=='/api/login'){
+        fetch(url, {
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
             method: 'POST',
+
             body: 'name='+ userName + '&password='+ pwd,
         })
             .then(function (data) {
@@ -115,6 +116,59 @@ var data;
                 console.log('Request failure: ', error);
             });
         console.log("entra in")
+    }else if(url=='/api/logout'){
+            fetch(url, {
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                method: 'POST',
+
+            })
+                .then(function (data) {
+                    console.log('Request success: ', data);
+
+
+                }).then(function () {
+
+            })
+                .catch(function (error) {
+                    console.log('Request failure: ', error);
+                });
+
+        }
+
+    }
+
+    function register(){
+
+        var userName=document.getElementById("inputName").value;
+        var pwd=document.getElementById("inputpwd").value;
+        console.log(userName);
+        console.log(pwd);
+        fetch("/api/players", {
+            credentials: 'include',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: 'POST',
+
+            body: JSON.stringify({
+                user: userName,
+                password: pwd
+            })
+        })
+            .then(function (data) {
+                console.log('Request success: ', data);
+
+
+            }).then(function () {
+
+        })
+            .catch(function (error) {
+                console.log('Request failure: ', error);
+            });
     }
 
 getData();

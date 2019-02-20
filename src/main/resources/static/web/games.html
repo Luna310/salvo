@@ -32,10 +32,11 @@
         <label>Password: <input id="inputpwd" type="text" name="password"></label>
 
     </form>
-    <button onclick="logIn()">Log In</button>
+    <button onclick="logIn_out('/api/login')">Log In</button>
 
     <form id="logout-form" onsubmit="return false">
-        <button>Log out</button>
+        <button onclick="logIn_out('/api/logout')">Log out</button>
+        <button onclick=" register()">Register</button>
     </form>
 </div>
 

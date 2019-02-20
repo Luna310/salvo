@@ -1,9 +1,12 @@
 package com.codeoftheweb.salvo;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import java.util.*;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @RequestMapping("/api")
@@ -96,14 +99,42 @@ public class SalvoController {
         return dto;
     }
 
+    private boolean isGuest(Authentication authentication) {
+        return authentication == null || authentication instanceof AnonymousAuthenticationToken;
+    }
+
+    private Player getCurrentUser(Authentication authentication){
+        return playerRepository.findByUser(authentication.getName());
+     }
+    @RequestMapping(value = "/players", method = RequestMethod.POST)
+    public ResponseEntity<Object> register(@RequestBody Player player)
+    {
+
+        if (player.getUser().isEmpty() || player.getPassword().isEmpty()) {
+            return new ResponseEntity<>("Missing data", HttpStatus.FORBIDDEN);
+        }
+
+        if (playerRepository.findByUser(player.getUser()) !=  null) {
+            return new ResponseEntity<>("Name already in use", HttpStatus.FORBIDDEN);
+        }
+
+        playerRepository.save(new Player(player.getUser(), player.getPassword()));
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
 
     @RequestMapping("/games")
-    public Map<String, Object> getAllGameDTO() {
+    public Map<String, Object> getAllGameDTO(Authentication authentication) {
         Map<String, Object> dto = new LinkedHashMap<String, Object>();
-
-        dto.put("games",gameRepository.findAll().stream().map(g -> gameMapDTO(g)).collect(Collectors.toList()) );
-        dto.put("leaderBoard",playerRepository.findAll().stream().map(pl -> scoresDto(pl.getScores())).collect(Collectors.toList()));
-
+        if(authentication!=null){
+            dto.put("currentUser", playerMapDTO(getCurrentUser(authentication)));
+            dto.put("games",gameRepository.findAll().stream().map(g -> gameMapDTO(g)).collect(Collectors.toList()) );
+            dto.put("leaderBoard",playerRepository.findAll().stream().map(pl -> scoresDto(pl.getScores()))
+                    .collect(Collectors.toList()));
+        }else if(authentication==null){
+            dto.put("games", gameRepository.findAll().stream().map(g -> gameMapDTO(g)).collect(Collectors.toList()));
+            dto.put("leaderBoard", playerRepository.findAll().stream().map(pl -> scoresDto(pl.getScores()))
+                    .collect(Collectors.toList()));
+        }
         return dto;
     }
 
@@ -122,4 +153,5 @@ public class SalvoController {
         return dto;
 
     }
+
 }

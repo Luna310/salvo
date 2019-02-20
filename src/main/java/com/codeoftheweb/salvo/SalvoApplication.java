@@ -419,6 +419,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/web/main.js").permitAll()
 				.antMatchers("/web/styleSalvo.css").permitAll()
 				.antMatchers("/api/games").permitAll()
+				.antMatchers("/api/players").permitAll()
 				/*para acceder a cualquier URL que comience con "/ api", el usuario debe tener el rol ADMIN*/
 				.antMatchers("/api/**").hasAuthority("ADMIN")
 				//para acceder a cualquier otra URL, solo necesita iniciar sesión con un rol de USER
