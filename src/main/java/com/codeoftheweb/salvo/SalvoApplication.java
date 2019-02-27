@@ -69,7 +69,7 @@ public class SalvoApplication {
 
 
 
-			GamePlayer gamePlayer1=new GamePlayer(player1,game1);
+			GamePlayer gamePlayer1=new GamePlayer(player1, game1);
 			GamePlayer gamePlayer2=new GamePlayer(player2,game1);
 			GamePlayer gamePlayer3=new GamePlayer(player1,game2);
 			GamePlayer gamePlayer4=new GamePlayer(player2,game2);
@@ -397,7 +397,7 @@ class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
 			if (player != null) {
 				return new User(player.getUser(), player.getPassword(),
 						//Aqui marcamos el tipo de roles que tendremos
-						AuthorityUtils.createAuthorityList("USER","ADMIN"));
+						AuthorityUtils.createAuthorityList("USER"));
 			} else {
 				throw new UsernameNotFoundException("Unknown user: " + inputUserName);
 			}
@@ -405,8 +405,8 @@ class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
 	}
 }
 
-	/*utiliza la autenticación basada en formularios, con reglas que permiten que solo los usuarios Admin accedan
-	a las URL de "admin".*/
+/*utiliza la autenticación basada en formularios, con reglas que permiten que solo los usuarios Admin accedan
+a las URL de "admin".*/
 @EnableWebSecurity
 @Configuration
 class WebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -421,18 +421,18 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/api/games").permitAll()
 				.antMatchers("/api/players").permitAll()
 				/*para acceder a cualquier URL que comience con "/ api", el usuario debe tener el rol ADMIN*/
-				.antMatchers("/api/**").hasAuthority("ADMIN")
+				//.antMatchers("/api/**").hasAuthority("ADMIN")
 				//para acceder a cualquier otra URL, solo necesita iniciar sesión con un rol de USER
 				.antMatchers("/**").hasAuthority("USER")
 				//.antMatchers("/api/game_view/{gamePlayerId}").hasAuthority("PLAYER")
 				.and()
 				//formLogin () dice que se use el inicio de sesión basado en formulario
 				.formLogin()
-				.usernameParameter("name")
+				.usernameParameter("user")
 				.passwordParameter("password")
 				.loginPage("/api/login");
 
-				http.logout().logoutUrl("/api/logout");
+		http.logout().logoutUrl("/api/logout");
 
 		// turn off checking for CSRF tokens
 		http.csrf().disable();
@@ -450,11 +450,11 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.logout().logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler());
 	}
 
-		private void clearAuthenticationAttributes(HttpServletRequest request) {
-			HttpSession session = request.getSession(false);
-			if (session != null) {
-				session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
-			}
+	private void clearAuthenticationAttributes(HttpServletRequest request) {
+		HttpSession session = request.getSession(false);
+		if (session != null) {
+			session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+		}
 
 	}
 

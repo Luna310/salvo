@@ -49,9 +49,6 @@ public class Ship {
         return this.location;
     }
 
-    public void setLocation(String[] location) {
-        this.location = Arrays.asList(location);
-    }
 
     public String getType() {
         return this.type;

@@ -6,6 +6,10 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+
     <link rel="stylesheet" type="text/css" href="styleSalvo.css">
     <meta charset="UTF-8">
     <title>BattleShip</title>
@@ -27,17 +31,30 @@
 <script src="main.js"></script>
 
 <div>
-    <form id="login-form" onsubmit="return false">
-        <div>Name: <input id="inputName" type="text" name="username"></div>
-        <label>Password: <input id="inputpwd" type="text" name="password"></label>
+    <div id="formShip" onsubmit="return false">
+        <div id="inputPassEmail">
+            <label>Name: <input id="inputName" type="text" name="username"></label>
 
-    </form>
-    <button onclick="logIn_out('/api/login')">Log In</button>
+            <label>Password: <input id="inputpwd" type="text" name="password"></label>
+        </div>
 
-    <form id="logout-form" onsubmit="return false">
-        <button onclick="logIn_out('/api/logout')">Log out</button>
-        <button onclick=" register()">Register</button>
-    </form>
+        <div id="in" style="display: block">
+            <button onclick="logIn_out('/api/login')">LogIn</button>
+        </div>
+
+        <div id="register" style="display: block">
+            <button onclick=" register()">Register</button>
+        </div>
+
+        <div id="out" style="display: none">
+            <button onclick="logIn_out('/api/logout')">LogOut</button>
+        </div>
+
+        <div id="createGame" style="display: none">
+            <button id="newGame" onclick=" createGame()">Create Game</button>
+        </div>
+
+    </div>
 </div>
 
 </body>

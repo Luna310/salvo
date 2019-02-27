@@ -74,7 +74,7 @@ function createTable() {
         }
         num=1;
 
-        }
+    }
 
 
 }
@@ -91,7 +91,7 @@ function getColorLocation() {
         document.getElementById(locations[i]).setAttribute("class","shipLocation");
     }
     this.locations=locations;
-console.log(locations);
+    console.log(locations);
 }
 
 
@@ -144,26 +144,26 @@ function createTableSalvos() {
 
 function getColorLocationSalvo() {
 
-  var currentTurn = [];
-  var opponentTurn = [];
-  var currentSalvo = [];
-  var opponetSalvo = [];
+    var currentTurn = [];
+    var opponentTurn = [];
+    var currentSalvo = [];
+    var opponetSalvo = [];
 
-  for(var i = 0;i<dataSalvos.length;i++){
+    for(var i = 0;i<dataSalvos.length;i++){
 
-      for(var j = 0; j < dataSalvos[i].salvos.length; j++) {
+        for(var j = 0; j < dataSalvos[i].salvos.length; j++) {
 
-          for(var k = 0;k<dataSalvos[i].salvos[j].location.length;k++){
-              if(dataGamePlayer[i].id == idGp){
-                  currentTurn.push(dataSalvos[i].salvos[j].turn);
-                  currentSalvo.push(dataSalvos[i].salvos[j].location[k]);
-              }else{
-                  opponentTurn.push(dataSalvos[i].salvos[j].turn);
-                  opponetSalvo.push(dataSalvos[i].salvos[j].location[k]);
-              }
-          }
-      }
-  }
+            for(var k = 0;k<dataSalvos[i].salvos[j].location.length;k++){
+                if(dataGamePlayer[i].id == idGp){
+                    currentTurn.push(dataSalvos[i].salvos[j].turn);
+                    currentSalvo.push(dataSalvos[i].salvos[j].location[k]);
+                }else{
+                    opponentTurn.push(dataSalvos[i].salvos[j].turn);
+                    opponetSalvo.push(dataSalvos[i].salvos[j].location[k]);
+                }
+            }
+        }
+    }
     console.log(currentSalvo);
     console.log(currentTurn);
     console.log(opponetSalvo);
@@ -179,10 +179,10 @@ function getColorLocationSalvo() {
             if(opponetSalvo[i]==this.locations[j]) {
                 hitLocation.push(opponetSalvo[i])
             }
-          var salvo = document.getElementById(opponetSalvo[i]);
-          salvo.setAttribute("class", "locationSalvoOpponent");
-          salvo.innerHTML = opponentTurn[i];
-      }
+            var salvo = document.getElementById(opponetSalvo[i]);
+            salvo.setAttribute("class", "locationSalvoOpponent");
+            salvo.innerHTML = opponentTurn[i];
+        }
     }
     for(var i = 0; i<hitLocation.length;i++){
         var hit = document.getElementById(hitLocation[i]);
@@ -206,8 +206,8 @@ function showInfoPlayer(){
 
     if(idGp == data.game.gamePlayers[0].id && data.game.gamePlayers[1]!=null){
         console.log("entra")
-    name1=data.game.gamePlayers[0].player.email;
-    name2=data.game.gamePlayers[1].player.email;
+        name1=data.game.gamePlayers[0].player.email;
+        name2=data.game.gamePlayers[1].player.email;
     }
     else if(idGp != data.game.gamePlayers[0].id){
         console.log("entra2")
@@ -218,9 +218,9 @@ function showInfoPlayer(){
         name1=data.game.gamePlayers[0].player.email;
         name2= " Waitting an opponent";
     }
-console.log(name1);
-console.log(name2);
-console.log(data.game.gamePlayers[0].player.email);
+    console.log(name1);
+    console.log(name2);
+    console.log(data.game.gamePlayers[0].player.email);
     var newH2=document.createElement("h2");
     document.getElementById("infoPlayers").appendChild(newH2);
     newH2.innerHTML = name1 + " VS " + name2

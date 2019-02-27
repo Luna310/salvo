@@ -87,7 +87,7 @@ public class SalvoController {
             } else {
                 System.out.print("Set a correct number!!!!");
             }
-             player = score.getPlayer().getUser();
+            player = score.getPlayer().getUser();
             total += score.getScore();
         }
         dto.put("player", player);
@@ -105,7 +105,7 @@ public class SalvoController {
 
     private Player getCurrentUser(Authentication authentication){
         return playerRepository.findByUser(authentication.getName());
-     }
+    }
     @RequestMapping(value = "/players", method = RequestMethod.POST)
     public ResponseEntity<Object> register(@RequestBody Player player)
     {
@@ -120,6 +120,30 @@ public class SalvoController {
 
         playerRepository.save(new Player(player.getUser(), player.getPassword()));
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value = "/games", method = RequestMethod.POST)
+    public ResponseEntity<Object> createGame(Authentication authentication){
+        if(authentication!=null){
+            Game newGame = new Game();
+            gameRepository.save(newGame);
+            GamePlayer newGamePlayer = new GamePlayer(getCurrentUser(authentication),newGame);
+            gamePlayerRepository.save(newGamePlayer);
+            return new ResponseEntity<>(new HashMap<String,Object>()
+            {{put("gpId", newGamePlayer.getId()); }}, HttpStatus.CREATED);
+        }else{
+            return new ResponseEntity<>("You need be loged", HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    @RequestMapping(value = "/game/{gameId}/players", method = RequestMethod.POST)
+    public ResponseEntity<Object> findGame(@PathVariable long gameId, Authentication authentication){
+
+        Game game = gameRepository.findOne(gameId);
+        GamePlayer newGamePlayer = new GamePlayer(getCurrentUser(authentication),game);
+        gamePlayerRepository.save(newGamePlayer);
+        return new ResponseEntity<>(new HashMap<String,Object>()
+        {{put("gameId", newGamePlayer.getId()); }}, HttpStatus.CREATED);
     }
 
     @RequestMapping("/games")
@@ -149,7 +173,6 @@ public class SalvoController {
         dto.put("game", gameMapDTO(gamePlayer.getGame()));
         dto.put("ships", ships.stream().map(sh -> shipDTO(sh)).collect(Collectors.toList()));
         dto.put("salvoPlayers", gamePlayers.stream().map(gp -> salvosDTO(gp.getSalvos())).collect(Collectors.toList()));
-
         return dto;
 
     }
