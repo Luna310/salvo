@@ -58,6 +58,7 @@ public class SalvoApplication {
 			Game game7 = new Game();
 			Game game8 = new Game();
 
+
 			gameRepository.save(game1);
 			gameRepository.save(game2);
 			gameRepository.save(game3);
@@ -66,7 +67,6 @@ public class SalvoApplication {
 			gameRepository.save(game6);
 			gameRepository.save(game7);
 			gameRepository.save(game8);
-
 
 
 			GamePlayer gamePlayer1=new GamePlayer(player1, game1);

@@ -272,8 +272,6 @@ function createGame(){
 
 }
 
-
-
 function joinGame(gameId) {
     //alert(gameId)
     fetch("/api/game/" + gameId + "/players",{
@@ -289,4 +287,3 @@ function joinGame(gameId) {
         console.log("Request failed:" + error.message);
     });
 }
-

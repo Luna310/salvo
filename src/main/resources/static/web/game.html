@@ -1,29 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link href="styleSalvo.css" rel="stylesheet" />
     <meta charset="UTF-8">
     <title> Ship Locations!</title>
 </head>
 <body>
-<h1> Ship Locations!</h1>
-<div id="infoPlayers">
+<div class="container">
+    <h1> Ship Locations!</h1>
+    <div id="infoPlayers">
 
-</div>
+    </div>
 
-<div id="table" class="container">
-    <table id="table1" class="table table-bordered">
+    <div class="shipButton row">
 
-    </table>
+        <div class="dropdownDestroyer col-lg-2">
+            <button id="destroyer" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                Destroyer
+            </button>
+            <div class="dropdown-menu">
+                <a onclick="implementShips('destroyer','horizontal')" class="dropdown-item" type="button">Horizontal</a>
+                <a onclick="implementShips('destroyer','vertical')" class="dropdown-item" type="button">Vertical</a>
+            </div>
+        </div>
+
+        <div class="dropdownPatrolBoat col-lg-2">
+            <button id="patrolBoat" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                Patol Boat
+            </button>
+            <div class="dropdown-menu">
+                <a onclick="implementShips('patrolBoat','horizontal')" class="dropdown-item" type="button">Horizontal</a>
+                <a onclick="implementShips('patrolBoat','vertical')" class="dropdown-item" type="button">Vertical</a>
+            </div>
+        </div>
+
+        <div class="dropdownSubmarine col-lg-2">
+            <button id="submarine" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                Submarine
+            </button>
+            <div class="dropdown-menu">
+                <a onclick="implementShips('submarine','horizontal')" class="dropdown-item" type="button">Horizontal</a>
+                <a onclick="implementShips('submarine','vertical')" class="dropdown-item" type="button">Vertical</a>
+            </div>
+        </div>
+
+        <div class="dropdownAircraftCarrie col-lg-2">
+            <button id="AircraftCarrier" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                Aircraft Carrier
+            </button>
+            <div class="dropdown-menu">
+                <a onclick="implementShips('AircraftCarrier','horizontal')" class="dropdown-item" type="button">Horizontal</a>
+                <a onclick="implementShips('AircraftCarrier','vertical')" class="dropdown-item" type="button">Vertical</a>
+            </div>
+        </div>
+
+        <div class="dropdownBattleship col-lg-2">
+            <button id="Battleship"  type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                Battleship
+            </button>
+            <div class="dropdown-menu">
+                <a onclick="implementShips('Battleship','horizontal')" class="dropdown-item" type="button">Horizontal</a>
+                <a onclick="implementShips('Battleship','vertical')" class="dropdown-item" type="button">Vertical</a>
+            </div>
+        </div>
+    </div>
+    <div id="table" class="container">
+        <table id="table1" class="table table-bordered">
+
+        </table>
+    </div>
+    <div id="tableSalvos" class="container">
+
+        <table id="tableSalvo" class="table table-bordered"></table>
+    </div>
+    <script src="game.js"></script>
 </div>
-<div id="tableSalvos" class="container">
-    <table id="tableSalvo" class="table table-bordered"></table>
-</div>
-<script src="game.js"></script>
 </body>
 </html>
