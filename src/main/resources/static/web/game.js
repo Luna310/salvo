@@ -1,18 +1,17 @@
 let data;
 let locations;
-let idGp=getParameterByName("gp");
+let idGp = getParameterByName("gp");
 let typeShip = "1";
 let orientationShip = "2";
-let arrayIdCelda=[];
-
+let arrayIdCelda = [];
+let allShips;
+let dataShips=[];
 function getData() {
     fetch("/api/game_view/" + getParameterByName("gp"), {
         method: "GET",
 
     }).then(function (response) {
         if (response.ok) {
-
-
             return response.json();
         }
 
@@ -22,11 +21,14 @@ function getData() {
         dataShips = data.ships;
         dataGamePlayer = data.game.gamePlayers;
         dataSalvos = data.salvoPlayers;
-
-
         getColorLocation();
         getColorLocationSalvo();
         showInfoPlayer();
+        if (dataShips.length > 0) {
+            document.getElementById("buttonsShips").style.display = "none";
+            document.getElementById("divButtonSalvos").style.display = "block";
+        }
+
     }).catch(function (error) {
         console.log("Request failed:" + error.message);
     });
@@ -34,26 +36,26 @@ function getData() {
 
 function createTable() {
 
-    var newThead = document.createElement("thead");
-    newThead.setAttribute("id","numberRow");
+    let newThead = document.createElement("thead");
+    newThead.setAttribute("id", "numberRow");
 
-    var newTbody = document.createElement("tbody");
-    newTbody.setAttribute("id","bodyTable");
+    let newTbody = document.createElement("tbody");
+    newTbody.setAttribute("id", "bodyTable");
 
-    var newTr = document.createElement("tr");
+    let newTr = document.createElement("tr");
 
     var newTd = document.createElement("td");
     document.getElementById("table1").appendChild(newThead);
     document.getElementById("table1").appendChild(newTbody);
     document.getElementById("numberRow").appendChild(newTd);
-    newTd.innerHTML=" ";
+    newTd.innerHTML = " ";
 
-    var arrayLetter = ["","A","B","C","D","E","F","G","H","I","J"];
-    var num=1;
-    for (var i=1;i<11;i++){
+    var arrayLetter = ["", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
+    var num = 1;
+    for (var i = 1; i < 11; i++) {
 
         var newTr2 = document.createElement("tr");
-        newTr2.setAttribute("id",arrayLetter[i]);
+        newTr2.setAttribute("id", arrayLetter[i]);
 
         var newTd = document.createElement("td");
 
@@ -61,48 +63,48 @@ function createTable() {
         document.getElementById("table1").appendChild(newTr);
         document.getElementById("numberRow").appendChild(newTd);
         document.getElementById("bodyTable").appendChild(newTr2);
-        newTd.innerHTML=i;
+        newTd.innerHTML = i;
 
         var newTd2 = document.createElement("td");
         newTr2.appendChild(newTd2);
         newTd2.innerHTML = arrayLetter[i];
 
-        for (var j = 1 ; j < arrayLetter.length; j++){
-            let idCelda = arrayLetter[i]+num;
+        for (var j = 1; j < arrayLetter.length; j++) {
+            let idCelda = arrayLetter[i] + num;
             var newTd3 = document.createElement("td");
             newTd3.setAttribute("id", idCelda);
-            newTd3.setAttribute("style","");
+            newTd3.setAttribute("style", "");
             num++;
             arrayIdCelda.push(idCelda);
             document.getElementById(arrayLetter[i]).appendChild(newTd3);
 
             newTd3.onclick = implementShips2(idCelda);
         }
-        num=1;
+        num = 1;
     }
 }
 
 function getColorLocation() {
 
     var locations = [];
-    for(var i = 0;i<dataShips.length;i++) {
+    for (var i = 0; i < dataShips.length; i++) {
         for (var j = 0; j < dataShips[i].location.length; j++) {
             locations.push(dataShips[i].location[j])
         }
     }
-    for(var i = 0;i<locations.length;i++) {
-        document.getElementById(locations[i]).setAttribute("class","shipLocation");
+    for (var i = 0; i < locations.length; i++) {
+        document.getElementById(locations[i]).setAttribute("class", "shipLocation");
     }
-    this.locations=locations;
+    this.locations = locations;
     //console.log(locations);
 }
 
 function createTableSalvos() {
     var newThead = document.createElement("thead");
-    newThead.setAttribute("id","numberRowSalvo");
+    newThead.setAttribute("id", "numberRowSalvo");
 
     var newTbody = document.createElement("tbody");
-    newTbody.setAttribute("id","bodyTableSalvo");
+    newTbody.setAttribute("id", "bodyTableSalvo");
 
     var newTr = document.createElement("tr");
 
@@ -110,14 +112,14 @@ function createTableSalvos() {
     document.getElementById("tableSalvo").appendChild(newThead);
     document.getElementById("tableSalvo").appendChild(newTbody);
     document.getElementById("numberRowSalvo").appendChild(newTd);
-    newTd.innerHTML=" ";
+    newTd.innerHTML = " ";
 
-    var arrayLetter = ["","A","B","C","D","E","F","G","H","I","J"];
-    var num=1;
-    for (var i=1;i<11;i++){
+    var arrayLetter = ["", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
+    var num = 1;
+    for (var i = 1; i < 11; i++) {
 
         var newTr2 = document.createElement("tr");
-        newTr2.setAttribute("id",arrayLetter[i]+"s");
+        newTr2.setAttribute("id", arrayLetter[i] + "S");
 
         var newTd = document.createElement("td");
 
@@ -125,19 +127,21 @@ function createTableSalvos() {
         document.getElementById("tableSalvo").appendChild(newTr);
         document.getElementById("numberRowSalvo").appendChild(newTd);
         document.getElementById("bodyTableSalvo").appendChild(newTr2);
-        newTd.innerHTML=i;
+        newTd.innerHTML = i;
 
-        var newTd2 = document.createElement("td");
+        let newTd2 = document.createElement("td");
         newTr2.appendChild(newTd2);
         newTd2.innerHTML = arrayLetter[i];
 
-        for (var j=1;j<arrayLetter.length;j++){
+        for (let j = 1; j < arrayLetter.length; j++) {
+            let idCeldaSalvos = arrayLetter[i] + num + "S";
             var newTd3 = document.createElement("td");
-            newTd3.setAttribute("id",arrayLetter[i]+num+"s");
+            newTd3.setAttribute("id", idCeldaSalvos);
             num++;
-            document.getElementById(arrayLetter[i]+"s").appendChild(newTd3);
+            document.getElementById(arrayLetter[i] + "S").appendChild(newTd3);
+            newTd3.onclick = implementSalvos(idCeldaSalvos);
         }
-        num=1;
+        num = 1;
 
     }
 
@@ -151,15 +155,15 @@ function getColorLocationSalvo() {
     var currentSalvo = [];
     var opponetSalvo = [];
 
-    for(var i = 0;i<dataSalvos.length;i++){
+    for (var i = 0; i < dataSalvos.length; i++) {
 
-        for(var j = 0; j < dataSalvos[i].salvos.length; j++) {
+        for (var j = 0; j < dataSalvos[i].salvos.length; j++) {
 
-            for(var k = 0;k<dataSalvos[i].salvos[j].location.length;k++){
-                if(dataGamePlayer[i].id == idGp){
+            for (var k = 0; k < dataSalvos[i].salvos[j].location.length; k++) {
+                if (dataGamePlayer[i].id == idGp) {
                     currentTurn.push(dataSalvos[i].salvos[j].turn);
                     currentSalvo.push(dataSalvos[i].salvos[j].location[k]);
-                }else{
+                } else {
                     opponentTurn.push(dataSalvos[i].salvos[j].turn);
                     opponetSalvo.push(dataSalvos[i].salvos[j].location[k]);
                 }
@@ -170,15 +174,15 @@ function getColorLocationSalvo() {
     // console.log(currentTurn);
     // console.log(opponetSalvo);
     // console.log(opponentTurn);
-    for(var i = 0;i<currentSalvo.length;i++) {
-        var salvo=document.getElementById(currentSalvo[i]+"s");
-        salvo.setAttribute("class","locationSalvo");
+    for (var i = 0; i < currentSalvo.length; i++) {
+        var salvo = document.getElementById(currentSalvo[i] + "s");
+        salvo.setAttribute("class", "locationSalvo");
         salvo.innerHTML = currentTurn[i];
     }
     var hitLocation = [];
-    for(var i = 0;i<opponetSalvo.length;i++) {
-        for(var j = 0;j<this.locations.length;j++){
-            if(opponetSalvo[i] == this.locations[j]) {
+    for (var i = 0; i < opponetSalvo.length; i++) {
+        for (var j = 0; j < this.locations.length; j++) {
+            if (opponetSalvo[i] == this.locations[j]) {
                 hitLocation.push(opponetSalvo[i])
             }
             var salvo = document.getElementById(opponetSalvo[i]);
@@ -186,9 +190,9 @@ function getColorLocationSalvo() {
             salvo.innerHTML = opponentTurn[i];
         }
     }
-    for(var i = 0; i<hitLocation.length;i++){
+    for (var i = 0; i < hitLocation.length; i++) {
         var hit = document.getElementById(hitLocation[i]);
-        hit.setAttribute("class","hit");
+        hit.setAttribute("class", "hit");
     }
 
     // console.log(idGp);
@@ -201,455 +205,507 @@ function getParameterByName(name) {
     return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
 }
 
-function showInfoPlayer(){
-    var name1="";
-    var name2="";
+function showInfoPlayer() {
+    var name1 = "";
+    var name2 = "";
 
-    if(idGp == data.game.gamePlayers[0].id && data.game.gamePlayers[1]!=null){
+    if (idGp == data.game.gamePlayers[0].id && data.game.gamePlayers[1] != null) {
         //console.log("entra")
-        name1=data.game.gamePlayers[0].player.email;
-        name2=data.game.gamePlayers[1].player.email;
+        name1 = data.game.gamePlayers[0].player.email;
+        name2 = data.game.gamePlayers[1].player.email;
     }
-    else if(idGp != data.game.gamePlayers[0].id){
+    else if (idGp != data.game.gamePlayers[0].id) {
         //console.log("entra2")
-        name1=data.game.gamePlayers[1].player.email;
-        name2=data.game.gamePlayers[0].player.email;
+        name1 = data.game.gamePlayers[1].player.email;
+        name2 = data.game.gamePlayers[0].player.email;
     }
-    else if(data.game.gamePlayers[1]==null){
-        name1=data.game.gamePlayers[0].player.email;
-        name2= " Waitting an opponent";
+    else if (data.game.gamePlayers[1] == null) {
+        name1 = data.game.gamePlayers[0].player.email;
+        name2 = " Waitting an opponent";
     }
     // console.log(name1);
     // console.log(name2);
     // console.log(data.game.gamePlayers[0].player.email);
-    var newH2=document.createElement("h2");
+    var newH2 = document.createElement("h2");
     document.getElementById("infoPlayers").appendChild(newH2);
     newH2.innerHTML = name1 + " VS " + name2
 
 }
 
-function implementShips(type,orientation) {
-    typeShip=type;
-    orientationShip=orientation;
+function implementShips(type, orientation) {
+    typeShip = type;
+    orientationShip = orientation;
     console.log(typeShip);
     console.log(orientationShip);
 
 }
 
-let positionsDestroyer=[];
-let positionsSubmarine=[];
-let positionsPatrol=[];
-let positionsAircraft=[];
-let positionsBattleShip=[];
-let allPositions=[];
-function implementShips2 (idCelda) {
+let positionsDestroyer = [];
+let positionsSubmarine = [];
+let positionsPatrol = [];
+let positionsAircraft = [];
+let positionsBattleShip = [];
+let allPositions = [];
+console.log(dataShips.length + "IIIIIIII")
+if(dataShips.length < 5) {
+    console.log(dataShips.length + "IIIIIIII")
+    function implementShips2(idCelda) {
 
-    return function lazy() {
+        return function lazy() {
 
-        if ((typeShip === "destroyer") && orientationShip === "horizontal") {
+            if ((typeShip === "destroyer") && orientationShip === "horizontal") {
 
-            for (let j = 0; j < positionsDestroyer.length; j++) {
+                for (let j = 0; j < positionsDestroyer.length; j++) {
 
-                document.getElementById(positionsDestroyer[j]).setAttribute("style", "");
-            }
+                    document.getElementById(positionsDestroyer[j]).setAttribute("style", "");
+                }
 
-            for (let i = 0; i < arrayIdCelda.length; i++) {
-                let checkAttribute = document.getElementById(arrayIdCelda[i]).getAttribute("style");
+                for (let i = 0; i < arrayIdCelda.length; i++) {
+                    let checkAttribute = document.getElementById(arrayIdCelda[i]).getAttribute("style");
 
-                if (arrayIdCelda[i] === idCelda && checkAttribute === "") {
-                    if (allPositions.includes(arrayIdCelda[i], 0) || allPositions.includes(arrayIdCelda[i + 1], 0) || allPositions.includes(arrayIdCelda[i + 2], 0)
-                        || arrayIdCelda[i + 1] == null || arrayIdCelda[i + 2] == null) {
-                        positionsDestroyer = [];
-                        document.getElementById(typeShip).disabled = false;
+                    if (arrayIdCelda[i] === idCelda && checkAttribute === "") {
+                        if (allPositions.includes(arrayIdCelda[i], 0) || allPositions.includes(arrayIdCelda[i + 1], 0) || allPositions.includes(arrayIdCelda[i + 2], 0)
+                            || arrayIdCelda[i + 1] == null || arrayIdCelda[i + 2] == null) {
+                            positionsDestroyer = [];
+                            document.getElementById(typeShip).disabled = false;
+                        } else {
+                            positionsDestroyer = [];
+                            positionsDestroyer = [arrayIdCelda[i], arrayIdCelda[i + 1], arrayIdCelda[i + 2]];
+                        }
+                    }
+                }
+
+                if (positionsDestroyer.length === 3) {
+                    if (positionsDestroyer[0].split("")[0] === positionsDestroyer[1].split("")[0] && positionsDestroyer[0].split("")[0] === positionsDestroyer[2].split("")[0]) {
+
+                        document.getElementById(typeShip).disabled = true;
+                        for (let j = 0; j < positionsDestroyer.length; j++) {
+                            document.getElementById(positionsDestroyer[j]).setAttribute("style", "background-color: blue;");
+                        }
                     } else {
                         positionsDestroyer = [];
-                        positionsDestroyer = [arrayIdCelda[i], arrayIdCelda[i + 1], arrayIdCelda[i + 2]];
-                    }
-                }
-            }
-
-            if (positionsDestroyer.length === 3) {
-                if (positionsDestroyer[0].split("")[0] === positionsDestroyer[1].split("")[0] && positionsDestroyer[0].split("")[0] === positionsDestroyer[2].split("")[0]) {
-
-                    document.getElementById(typeShip).disabled = true;
-                    for (let j = 0; j < positionsDestroyer.length; j++) {
-                        document.getElementById(positionsDestroyer[j]).setAttribute("style", "background-color: blue;");
-                    }
-                } else {
-                    positionsDestroyer = [];
-                    document.getElementById(typeShip).disabled = false;
-                }
-            }
-            allPositions = [];
-            allPositions = [].concat(positionsSubmarine, positionsDestroyer, positionsPatrol, positionsAircraft, positionsBattleShip);
-        }
-
-        if ((typeShip === "destroyer") && orientationShip === "vertical") {
-
-            for (let j = 0; j < positionsDestroyer.length; j++) {
-
-                document.getElementById(positionsDestroyer[j]).setAttribute("style", "");
-            }
-
-            for (let i = 0; i < arrayIdCelda.length; i++) {
-                let checkAttribute = document.getElementById(arrayIdCelda[i]).getAttribute("style");
-
-                if (arrayIdCelda[i] === idCelda && checkAttribute === "") {
-                    if (allPositions.includes(arrayIdCelda[i], 0) || allPositions.includes(arrayIdCelda[i + 10], 0) || allPositions.includes(arrayIdCelda[i + 20], 0)
-                        || arrayIdCelda[i + 10] == null || arrayIdCelda[i + 20] == null) {
-                        positionsDestroyer = [];
                         document.getElementById(typeShip).disabled = false;
+                    }
+                }
+                allPositions = [];
+                allPositions = [].concat(positionsSubmarine, positionsDestroyer, positionsPatrol, positionsAircraft, positionsBattleShip);
+            }
+
+            if ((typeShip === "destroyer") && orientationShip === "vertical") {
+
+                for (let j = 0; j < positionsDestroyer.length; j++) {
+
+                    document.getElementById(positionsDestroyer[j]).setAttribute("style", "");
+                }
+
+                for (let i = 0; i < arrayIdCelda.length; i++) {
+                    let checkAttribute = document.getElementById(arrayIdCelda[i]).getAttribute("style");
+
+                    if (arrayIdCelda[i] === idCelda && checkAttribute === "") {
+                        if (allPositions.includes(arrayIdCelda[i], 0) || allPositions.includes(arrayIdCelda[i + 10], 0) || allPositions.includes(arrayIdCelda[i + 20], 0)
+                            || arrayIdCelda[i + 10] == null || arrayIdCelda[i + 20] == null) {
+                            positionsDestroyer = [];
+                            document.getElementById(typeShip).disabled = false;
+                        } else {
+                            positionsDestroyer = [];
+                            positionsDestroyer = [arrayIdCelda[i], arrayIdCelda[i + 10], arrayIdCelda[i + 20]];
+                        }
+                    }
+                }
+
+                if (positionsDestroyer.length === 3) {
+                    if (positionsDestroyer[0].split("")[1] === positionsDestroyer[1].split("")[1] && positionsDestroyer[0].split("")[1] === positionsDestroyer[2].split("")[1]) {
+
+                        document.getElementById(typeShip).disabled = true;
+                        for (let j = 0; j < positionsDestroyer.length; j++) {
+                            document.getElementById(positionsDestroyer[j]).setAttribute("style", "background-color: blue;");
+                        }
                     } else {
                         positionsDestroyer = [];
-                        positionsDestroyer = [arrayIdCelda[i], arrayIdCelda[i + 10], arrayIdCelda[i + 20]];
-                    }
-                }
-            }
-
-            if (positionsDestroyer.length === 3) {
-                if (positionsDestroyer[0].split("")[1] === positionsDestroyer[1].split("")[1] && positionsDestroyer[0].split("")[1] === positionsDestroyer[2].split("")[1]) {
-
-                    document.getElementById(typeShip).disabled = true;
-                    for (let j = 0; j < positionsDestroyer.length; j++) {
-                        document.getElementById(positionsDestroyer[j]).setAttribute("style", "background-color: blue;");
-                    }
-                } else {
-                    positionsDestroyer = [];
-                    document.getElementById(typeShip).disabled = false;
-                }
-            }
-            allPositions = [];
-            allPositions = [].concat(positionsSubmarine, positionsDestroyer, positionsPatrol, positionsAircraft, positionsBattleShip);
-        }
-
-        if ((typeShip === "submarine") && orientationShip === "horizontal") {
-
-            for (let j = 0; j < positionsSubmarine.length; j++) {
-                document.getElementById(positionsSubmarine[j]).setAttribute("style", "");
-            }
-
-            for (let i = 0; i < arrayIdCelda.length; i++) {
-                let checkAttribute = document.getElementById(arrayIdCelda[i]).getAttribute("style");
-
-
-                if (arrayIdCelda[i] === idCelda && checkAttribute === "") {
-
-                    if (allPositions.includes(arrayIdCelda[i], 0) || allPositions.includes(arrayIdCelda[i + 1], 0) || allPositions.includes(arrayIdCelda[i + 2], 0)
-                        || arrayIdCelda[i + 1] == null || arrayIdCelda[i + 2] == null) {
-                        positionsSubmarine = [];
                         document.getElementById(typeShip).disabled = false;
+                    }
+                }
+                allPositions = [];
+                allPositions = [].concat(positionsSubmarine, positionsDestroyer, positionsPatrol, positionsAircraft, positionsBattleShip);
+            }
+
+            if ((typeShip === "submarine") && orientationShip === "horizontal") {
+
+                for (let j = 0; j < positionsSubmarine.length; j++) {
+                    document.getElementById(positionsSubmarine[j]).setAttribute("style", "");
+                }
+
+                for (let i = 0; i < arrayIdCelda.length; i++) {
+                    let checkAttribute = document.getElementById(arrayIdCelda[i]).getAttribute("style");
+
+
+                    if (arrayIdCelda[i] === idCelda && checkAttribute === "") {
+
+                        if (allPositions.includes(arrayIdCelda[i], 0) || allPositions.includes(arrayIdCelda[i + 1], 0) || allPositions.includes(arrayIdCelda[i + 2], 0)
+                            || arrayIdCelda[i + 1] == null || arrayIdCelda[i + 2] == null) {
+                            positionsSubmarine = [];
+                            document.getElementById(typeShip).disabled = false;
+                        } else {
+                            positionsSubmarine = [];
+                            positionsSubmarine = [arrayIdCelda[i], arrayIdCelda[i + 1], arrayIdCelda[i + 2]];
+                        }
+                    }
+                }
+
+                if (positionsSubmarine.length === 3) {
+                    if (positionsSubmarine[0].split("")[0] === positionsSubmarine[1].split("")[0] && positionsSubmarine[0].split("")[0] === positionsSubmarine[2].split("")[0]) {
+                        document.getElementById(typeShip).disabled = true;
+
+                        for (let j = 0; j < positionsSubmarine.length; j++) {
+                            document.getElementById(positionsSubmarine[j]).setAttribute("style", "background-color: violet;");
+                        }
                     } else {
                         positionsSubmarine = [];
-                        positionsSubmarine = [arrayIdCelda[i], arrayIdCelda[i + 1], arrayIdCelda[i + 2]];
-                    }
-                }
-            }
-
-            if (positionsSubmarine.length === 3) {
-                if (positionsSubmarine[0].split("")[0] === positionsSubmarine[1].split("")[0] && positionsSubmarine[0].split("")[0] === positionsSubmarine[2].split("")[0]) {
-                    document.getElementById(typeShip).disabled = true;
-
-                    for (let j = 0; j < positionsSubmarine.length; j++) {
-                        document.getElementById(positionsSubmarine[j]).setAttribute("style", "background-color: violet;");
-                    }
-                } else {
-                    positionsSubmarine = [];
-                    document.getElementById(typeShip).disabled = false;
-                }
-            }
-            allPositions = [];
-            allPositions = [].concat(positionsSubmarine, positionsDestroyer, positionsPatrol, positionsAircraft, positionsBattleShip);
-        }
-
-        if ((typeShip === "submarine") && orientationShip === "vertical") {
-
-            for (let j = 0; j < positionsSubmarine.length; j++) {
-                document.getElementById(positionsSubmarine[j]).setAttribute("style", "");
-            }
-
-            for (let i = 0; i < arrayIdCelda.length; i++) {
-                let checkAttribute = document.getElementById(arrayIdCelda[i]).getAttribute("style");
-
-
-                if (arrayIdCelda[i] === idCelda && checkAttribute === "") {
-
-                    if (allPositions.includes(arrayIdCelda[i], 0) || allPositions.includes(arrayIdCelda[i + 10], 0) || allPositions.includes(arrayIdCelda[i + 20], 0)
-                        || arrayIdCelda[i + 10] == null || arrayIdCelda[i + 20] == null) {
-                        positionsSubmarine = [];
                         document.getElementById(typeShip).disabled = false;
+                    }
+                }
+                allPositions = [];
+                allPositions = [].concat(positionsSubmarine, positionsDestroyer, positionsPatrol, positionsAircraft, positionsBattleShip);
+            }
+
+            if ((typeShip === "submarine") && orientationShip === "vertical") {
+
+                for (let j = 0; j < positionsSubmarine.length; j++) {
+                    document.getElementById(positionsSubmarine[j]).setAttribute("style", "");
+                }
+
+                for (let i = 0; i < arrayIdCelda.length; i++) {
+                    let checkAttribute = document.getElementById(arrayIdCelda[i]).getAttribute("style");
+
+
+                    if (arrayIdCelda[i] === idCelda && checkAttribute === "") {
+
+                        if (allPositions.includes(arrayIdCelda[i], 0) || allPositions.includes(arrayIdCelda[i + 10], 0) || allPositions.includes(arrayIdCelda[i + 20], 0)
+                            || arrayIdCelda[i + 10] == null || arrayIdCelda[i + 20] == null) {
+                            positionsSubmarine = [];
+                            document.getElementById(typeShip).disabled = false;
+                        } else {
+                            positionsSubmarine = [];
+                            positionsSubmarine = [arrayIdCelda[i], arrayIdCelda[i + 10], arrayIdCelda[i + 20]];
+                        }
+                    }
+                }
+
+                if (positionsSubmarine.length === 3) {
+                    if (positionsSubmarine[0].split("")[1] === positionsSubmarine[1].split("")[1] && positionsSubmarine[0].split("")[1] === positionsSubmarine[2].split("")[1]) {
+                        document.getElementById(typeShip).disabled = true;
+
+                        for (let j = 0; j < positionsSubmarine.length; j++) {
+                            document.getElementById(positionsSubmarine[j]).setAttribute("style", "background-color: violet;");
+                        }
                     } else {
                         positionsSubmarine = [];
-                        positionsSubmarine = [arrayIdCelda[i], arrayIdCelda[i + 10], arrayIdCelda[i + 20]];
+                        document.getElementById(typeShip).disabled = false;
                     }
                 }
+                allPositions = [];
+                allPositions = [].concat(positionsSubmarine, positionsDestroyer, positionsPatrol, positionsAircraft, positionsBattleShip);
             }
 
-            if (positionsSubmarine.length === 3) {
-                if (positionsSubmarine[0].split("")[1] === positionsSubmarine[1].split("")[1] && positionsSubmarine[0].split("")[1] === positionsSubmarine[2].split("")[1]) {
-                    document.getElementById(typeShip).disabled = true;
+            if (typeShip === "patrolBoat" && orientationShip === "horizontal") {
 
-                    for (let j = 0; j < positionsSubmarine.length; j++) {
-                        document.getElementById(positionsSubmarine[j]).setAttribute("style", "background-color: violet;");
-                    }
-                } else {
-                    positionsSubmarine = [];
-                    document.getElementById(typeShip).disabled = false;
+                for (let j = 0; j < positionsPatrol.length; j++) {
+                    document.getElementById(positionsPatrol[j]).setAttribute("style", "");
                 }
-            }
-            allPositions = [];
-            allPositions = [].concat(positionsSubmarine, positionsDestroyer, positionsPatrol, positionsAircraft, positionsBattleShip);
-        }
 
-        if (typeShip === "patrolBoat" && orientationShip === "horizontal"){
+                for (let i = 0; i < arrayIdCelda.length; i++) {
+                    if (arrayIdCelda[i] === idCelda) {
+                        if (allPositions.includes(arrayIdCelda[i], 0) || allPositions.includes(arrayIdCelda[i + 1], 0) || arrayIdCelda[i + 1] == null) {
+                            positionsPatrol = [];
+                            document.getElementById(typeShip).disabled = false;
+                        } else {
+                            positionsPatrol = [arrayIdCelda[i], arrayIdCelda[i + 1]];
+                        }
+                    }
+                }
 
-            for (let j = 0; j < positionsPatrol.length; j++) {
-                document.getElementById(positionsPatrol[j]).setAttribute("style", "");
-            }
+                if (positionsPatrol.length === 2) {
+                    if (positionsPatrol[0].split("")[0] === positionsPatrol[1].split("")[0]) {
+                        document.getElementById(typeShip).disabled = true;
 
-            for (let i = 0; i < arrayIdCelda.length; i++) {
-                if (arrayIdCelda[i] === idCelda) {
-                    if (allPositions.includes(arrayIdCelda[i], 0) || allPositions.includes(arrayIdCelda[i + 1], 0) || arrayIdCelda[i + 1] == null) {
+                        for (let j = 0; j < positionsPatrol.length; j++) {
+                            document.getElementById(positionsPatrol[j]).setAttribute("style", "background-color: black;");
+                        }
+                    } else {
                         positionsPatrol = [];
                         document.getElementById(typeShip).disabled = false;
+                    }
+                }
+                allPositions = [];
+                allPositions = [].concat(positionsSubmarine, positionsDestroyer, positionsPatrol, positionsAircraft, positionsBattleShip);
+            }
+
+            if (typeShip === "patrolBoat" && orientationShip === "vertical") {
+
+                for (let j = 0; j < positionsPatrol.length; j++) {
+                    document.getElementById(positionsPatrol[j]).setAttribute("style", "");
+                }
+
+                for (let i = 0; i < arrayIdCelda.length; i++) {
+                    if (arrayIdCelda[i] === idCelda) {
+                        if (allPositions.includes(arrayIdCelda[i], 0) || allPositions.includes(arrayIdCelda[i + 10], 0) || arrayIdCelda[i + 10] == null) {
+                            positionsPatrol = [];
+                            document.getElementById(typeShip).disabled = false;
+                        } else {
+                            positionsPatrol = [arrayIdCelda[i], arrayIdCelda[i + 10]];
+                        }
+                    }
+                }
+
+                if (positionsPatrol.length === 2) {
+                    if (positionsPatrol[0].split("")[1] === positionsPatrol[1].split("")[1]) {
+                        document.getElementById(typeShip).disabled = true;
+
+                        for (let j = 0; j < positionsPatrol.length; j++) {
+                            document.getElementById(positionsPatrol[j]).setAttribute("style", "background-color: black;");
+                        }
                     } else {
-                        positionsPatrol = [arrayIdCelda[i], arrayIdCelda[i + 1]];
-                    }
-                }
-            }
-
-            if (positionsPatrol.length === 2) {
-                if (positionsPatrol[0].split("")[0] === positionsPatrol[1].split("")[0]) {
-                    document.getElementById(typeShip).disabled = true;
-
-                    for (let j = 0; j < positionsPatrol.length; j++) {
-                        document.getElementById(positionsPatrol[j]).setAttribute("style", "background-color: black;");
-                    }
-                } else {
-                    positionsPatrol = [];
-                    document.getElementById(typeShip).disabled = false;
-                }
-            }
-            allPositions = [];
-            allPositions = [].concat(positionsSubmarine, positionsDestroyer, positionsPatrol, positionsAircraft, positionsBattleShip);
-        }
-
-        if (typeShip === "patrolBoat" && orientationShip === "vertical"){
-
-            for (let j = 0; j < positionsPatrol.length; j++) {
-                document.getElementById(positionsPatrol[j]).setAttribute("style", "");
-            }
-
-            for (let i = 0; i < arrayIdCelda.length; i++) {
-                if (arrayIdCelda[i] === idCelda) {
-                    if (allPositions.includes(arrayIdCelda[i], 0) || allPositions.includes(arrayIdCelda[i + 10], 0) || arrayIdCelda[i + 10] == null) {
                         positionsPatrol = [];
                         document.getElementById(typeShip).disabled = false;
+                    }
+                }
+                allPositions = [];
+                allPositions = [].concat(positionsSubmarine, positionsDestroyer, positionsPatrol, positionsAircraft, positionsBattleShip);
+            }
+
+            if (typeShip === "AircraftCarrier" && orientationShip === "horizontal") {
+
+                for (let j = 0; j < positionsAircraft.length; j++) {
+                    document.getElementById(positionsAircraft[j]).setAttribute("style", "");
+                }
+
+                for (let i = 0; i < arrayIdCelda.length; i++) {
+                    if (arrayIdCelda[i] === idCelda) {
+                        if (allPositions.includes(arrayIdCelda[i], 0) || allPositions.includes(arrayIdCelda[i + 1], 0) || allPositions.includes(arrayIdCelda[i + 2], 0)
+                            || allPositions.includes(arrayIdCelda[i + 3], 0) || allPositions.includes(arrayIdCelda[i + 4], 0) || arrayIdCelda[i + 1] == null
+                            || arrayIdCelda[i + 2] == null || arrayIdCelda[i + 3] == null || arrayIdCelda[i + 4] == null) {
+                            positionsAircraft = [];
+                            document.getElementById(typeShip).disabled = false;
+                        } else {
+                            positionsAircraft = [];
+                            positionsAircraft = [arrayIdCelda[i], arrayIdCelda[i + 1], arrayIdCelda[i + 2], arrayIdCelda[i + 3], arrayIdCelda[i + 4]];
+                        }
+                    }
+                }
+
+                if (positionsAircraft.length === 5) {
+                    if (positionsAircraft[0].split("")[0] === positionsAircraft[1].split("")[0] && positionsAircraft[0].split("")[0] === positionsAircraft[2].split("")[0]
+                        && positionsAircraft[0].split("")[0] === positionsAircraft[3].split("")[0] && positionsAircraft[0].split("")[0] === positionsAircraft[4].split("")[0]) {
+                        document.getElementById(typeShip).disabled = true;
+
+                        for (let j = 0; j < positionsAircraft.length; j++) {
+                            document.getElementById(positionsAircraft[j]).setAttribute("style", "background-color: green;");
+                        }
                     } else {
-                        positionsPatrol = [arrayIdCelda[i], arrayIdCelda[i + 10]];
-                    }
-                }
-            }
-
-            if (positionsPatrol.length === 2) {
-                if (positionsPatrol[0].split("")[1] === positionsPatrol[1].split("")[1]) {
-                    document.getElementById(typeShip).disabled = true;
-
-                    for (let j = 0; j < positionsPatrol.length; j++) {
-                        document.getElementById(positionsPatrol[j]).setAttribute("style", "background-color: black;");
-                    }
-                } else {
-                    positionsPatrol = [];
-                    document.getElementById(typeShip).disabled = false;
-                }
-            }
-            allPositions = [];
-            allPositions = [].concat(positionsSubmarine, positionsDestroyer, positionsPatrol, positionsAircraft, positionsBattleShip);
-        }
-
-        if (typeShip === "AircraftCarrier" && orientationShip === "horizontal") {
-
-            for (let j = 0; j < positionsAircraft.length; j++) {
-                document.getElementById(positionsAircraft[j]).setAttribute("style", "");
-            }
-
-            for (let i = 0; i < arrayIdCelda.length; i++) {
-                if (arrayIdCelda[i] === idCelda) {
-                    if (allPositions.includes(arrayIdCelda[i],0) || allPositions.includes(arrayIdCelda[i+1],0) || allPositions.includes(arrayIdCelda[i+2],0)
-                        || allPositions.includes(arrayIdCelda[i+3],0) || allPositions.includes(arrayIdCelda[i+4],0) || arrayIdCelda[i + 1] == null
-                        || arrayIdCelda[i + 2] == null || arrayIdCelda[i + 3] == null || arrayIdCelda[i + 4] == null){
                         positionsAircraft = [];
                         document.getElementById(typeShip).disabled = false;
-                    }else {
-                        positionsAircraft = [];
-                        positionsAircraft = [arrayIdCelda[i], arrayIdCelda[i + 1], arrayIdCelda[i+2], arrayIdCelda[i+3], arrayIdCelda[i+4]];
                     }
                 }
+                allPositions = [];
+                allPositions = [].concat(positionsSubmarine, positionsDestroyer, positionsPatrol, positionsAircraft, positionsBattleShip);
             }
 
-            if (positionsAircraft.length === 5) {
-                if (positionsAircraft[0].split("")[0] === positionsAircraft[1].split("")[0] && positionsAircraft[0].split("")[0] === positionsAircraft[2].split("")[0]
-                    && positionsAircraft[0].split("")[0] === positionsAircraft[3].split("")[0] && positionsAircraft[0].split("")[0] === positionsAircraft[4].split("")[0]){
-                    document.getElementById(typeShip).disabled = true;
+            if (typeShip === "AircraftCarrier" && orientationShip === "vertical") {
 
-                    for (let j = 0; j < positionsAircraft.length; j++) {
-                        document.getElementById(positionsAircraft[j]).setAttribute("style", "background-color: green;");
-                    }
-                }else {
-                    positionsAircraft = [];
-                    document.getElementById(typeShip).disabled = false;
+                for (let j = 0; j < positionsAircraft.length; j++) {
+                    document.getElementById(positionsAircraft[j]).setAttribute("style", "");
                 }
-            }
-            allPositions = [];
-            allPositions = [].concat(positionsSubmarine, positionsDestroyer, positionsPatrol, positionsAircraft, positionsBattleShip);
-        }
 
-        if (typeShip === "AircraftCarrier" && orientationShip === "vertical") {
+                for (let i = 0; i < arrayIdCelda.length; i++) {
+                    if (arrayIdCelda[i] === idCelda) {
+                        if (allPositions.includes(arrayIdCelda[i], 0) || allPositions.includes(arrayIdCelda[i + 10], 0) || allPositions.includes(arrayIdCelda[i + 20], 0)
+                            || allPositions.includes(arrayIdCelda[i + 30], 0) || allPositions.includes(arrayIdCelda[i + 40], 0) || arrayIdCelda[i + 10] == null
+                            || arrayIdCelda[i + 20] == null || arrayIdCelda[i + 30] == null || arrayIdCelda[i + 40] == null) {
+                            positionsAircraft = [];
+                            document.getElementById(typeShip).disabled = false;
+                        } else {
+                            positionsAircraft = [];
+                            positionsAircraft = [arrayIdCelda[i], arrayIdCelda[i + 10], arrayIdCelda[i + 20], arrayIdCelda[i + 30], arrayIdCelda[i + 40]];
+                        }
+                    }
+                }
 
-            for (let j = 0; j < positionsAircraft.length; j++) {
-                document.getElementById(positionsAircraft[j]).setAttribute("style", "");
-            }
+                if (positionsAircraft.length === 5) {
+                    if (positionsAircraft[0].split("")[1] === positionsAircraft[1].split("")[1] && positionsAircraft[0].split("")[1] === positionsAircraft[2].split("")[1]
+                        && positionsAircraft[0].split("")[1] === positionsAircraft[3].split("")[1] && positionsAircraft[0].split("")[1] === positionsAircraft[4].split("")[1]) {
+                        document.getElementById(typeShip).disabled = true;
 
-            for (let i = 0; i < arrayIdCelda.length; i++) {
-                if (arrayIdCelda[i] === idCelda) {
-                    if (allPositions.includes(arrayIdCelda[i],0) || allPositions.includes(arrayIdCelda[i+10],0) || allPositions.includes(arrayIdCelda[i+20],0)
-                        || allPositions.includes(arrayIdCelda[i+30],0) || allPositions.includes(arrayIdCelda[i+40],0) || arrayIdCelda[i + 10] == null
-                        || arrayIdCelda[i + 20] == null || arrayIdCelda[i + 30] == null || arrayIdCelda[i + 40] == null){
+                        for (let j = 0; j < positionsAircraft.length; j++) {
+                            document.getElementById(positionsAircraft[j]).setAttribute("style", "background-color: green;");
+                        }
+                    } else {
                         positionsAircraft = [];
                         document.getElementById(typeShip).disabled = false;
-                    }else {
-                        positionsAircraft = [];
-                        positionsAircraft = [arrayIdCelda[i], arrayIdCelda[i + 10], arrayIdCelda[i+20], arrayIdCelda[i+30], arrayIdCelda[i+40]];
                     }
                 }
+                allPositions = [];
+                allPositions = [].concat(positionsSubmarine, positionsDestroyer, positionsPatrol, positionsAircraft, positionsBattleShip);
             }
 
-            if (positionsAircraft.length === 5) {
-                if (positionsAircraft[0].split("")[1] === positionsAircraft[1].split("")[1] && positionsAircraft[0].split("")[1] === positionsAircraft[2].split("")[1]
-                    && positionsAircraft[0].split("")[1] === positionsAircraft[3].split("")[1] && positionsAircraft[0].split("")[1] === positionsAircraft[4].split("")[1]){
-                    document.getElementById(typeShip).disabled = true;
+            if (typeShip === "Battleship" && orientationShip === "horizontal") {
 
-                    for (let j = 0; j < positionsAircraft.length; j++) {
-                        document.getElementById(positionsAircraft[j]).setAttribute("style", "background-color: green;");
-                    }
-                }else {
-                    positionsAircraft = [];
-                    document.getElementById(typeShip).disabled = false;
+                for (let j = 0; j < positionsBattleShip.length; j++) {
+                    document.getElementById(positionsBattleShip[j]).setAttribute("style", "");
                 }
-            }
-            allPositions = [];
-            allPositions = [].concat(positionsSubmarine, positionsDestroyer, positionsPatrol, positionsAircraft, positionsBattleShip);
-        }
 
-        if (typeShip === "Battleship" && orientationShip === "horizontal") {
+                for (let i = 0; i < arrayIdCelda.length; i++) {
+                    if (arrayIdCelda[i] === idCelda) {
+                        if (allPositions.includes(arrayIdCelda[i], 0) || allPositions.includes(arrayIdCelda[i + 1], 0) || allPositions.includes(arrayIdCelda[i + 2], 0)
+                            || allPositions.includes(arrayIdCelda[i + 3], 0) || arrayIdCelda[i + 1] == null
+                            || arrayIdCelda[i + 2] == null || arrayIdCelda[i + 3] == null) {
+                            positionsBattleShip = [];
+                            document.getElementById(typeShip).disabled = false;
+                        } else {
+                            positionsBattleShip = [];
+                            positionsBattleShip = [arrayIdCelda[i], arrayIdCelda[i + 1], arrayIdCelda[i + 2], arrayIdCelda[i + 3]];
+                        }
+                    }
+                }
 
-            for (let j = 0; j < positionsBattleShip.length; j++) {
-                document.getElementById(positionsBattleShip[j]).setAttribute("style", "");
-            }
+                if (positionsBattleShip.length === 4) {
+                    if (positionsBattleShip[0].split("")[0] === positionsBattleShip[1].split("")[0] && positionsBattleShip[0].split("")[0] === positionsBattleShip[2].split("")[0]
+                        && positionsBattleShip[0].split("")[0] === positionsBattleShip[3].split("")[0]) {
+                        document.getElementById(typeShip).disabled = true;
 
-            for (let i = 0; i < arrayIdCelda.length; i++) {
-                if (arrayIdCelda[i] === idCelda) {
-                    if (allPositions.includes(arrayIdCelda[i],0) || allPositions.includes(arrayIdCelda[i+1],0) || allPositions.includes(arrayIdCelda[i+2],0)
-                        || allPositions.includes(arrayIdCelda[i+3],0) || arrayIdCelda[i + 1] == null
-                        || arrayIdCelda[i + 2] == null || arrayIdCelda[i + 3] == null){
+                        for (let j = 0; j < positionsBattleShip.length; j++) {
+                            document.getElementById(positionsBattleShip[j]).setAttribute("style", "background-color: red;");
+                        }
+                    } else {
                         positionsBattleShip = [];
                         document.getElementById(typeShip).disabled = false;
-                    }else {
-                        positionsBattleShip = [];
-                        positionsBattleShip = [arrayIdCelda[i], arrayIdCelda[i + 1], arrayIdCelda[i+2], arrayIdCelda[i+3]];
                     }
                 }
+                allPositions = [];
+                allPositions = [].concat(positionsSubmarine, positionsDestroyer, positionsPatrol, positionsAircraft, positionsBattleShip);
             }
 
-            if (positionsBattleShip.length === 4) {
-                if (positionsBattleShip[0].split("")[0] === positionsBattleShip[1].split("")[0] && positionsBattleShip[0].split("")[0] === positionsBattleShip[2].split("")[0]
-                    && positionsBattleShip[0].split("")[0] === positionsBattleShip[3].split("")[0]){
-                    document.getElementById(typeShip).disabled = true;
+            if (typeShip === "Battleship" && orientationShip === "vertical") {
 
-                    for (let j = 0; j < positionsBattleShip.length; j++) {
-                        document.getElementById(positionsBattleShip[j]).setAttribute("style", "background-color: red;");
-                    }
-                }else {
-                    positionsBattleShip = [];
-                    document.getElementById(typeShip).disabled = false;
+                for (let j = 0; j < positionsBattleShip.length; j++) {
+                    document.getElementById(positionsBattleShip[j]).setAttribute("style", "");
                 }
-            }
-            allPositions = [];
-            allPositions = [].concat(positionsSubmarine, positionsDestroyer, positionsPatrol, positionsAircraft, positionsBattleShip);
-        }
 
-        if (typeShip === "Battleship" && orientationShip === "vertical") {
+                for (let i = 0; i < arrayIdCelda.length; i++) {
+                    if (arrayIdCelda[i] === idCelda) {
+                        if (allPositions.includes(arrayIdCelda[i], 0) || allPositions.includes(arrayIdCelda[i + 10], 0) || allPositions.includes(arrayIdCelda[i + 20], 0)
+                            || allPositions.includes(arrayIdCelda[i + 30], 0) || arrayIdCelda[i + 1] == null
+                            || arrayIdCelda[i + 20] == null || arrayIdCelda[i + 30] == null) {
+                            positionsBattleShip = [];
+                            document.getElementById(typeShip).disabled = false;
+                        } else {
+                            positionsBattleShip = [];
+                            positionsBattleShip = [arrayIdCelda[i], arrayIdCelda[i + 10], arrayIdCelda[i + 20], arrayIdCelda[i + 30]];
+                        }
+                    }
+                }
 
-            for (let j = 0; j < positionsBattleShip.length; j++) {
-                document.getElementById(positionsBattleShip[j]).setAttribute("style", "");
-            }
+                if (positionsBattleShip.length === 4) {
+                    if (positionsBattleShip[0].split("")[1] === positionsBattleShip[1].split("")[1] && positionsBattleShip[0].split("")[1] === positionsBattleShip[2].split("")[1]
+                        && positionsBattleShip[0].split("")[1] === positionsBattleShip[3].split("")[1]) {
+                        document.getElementById(typeShip).disabled = true;
 
-            for (let i = 0; i < arrayIdCelda.length; i++) {
-                if (arrayIdCelda[i] === idCelda) {
-                    if (allPositions.includes(arrayIdCelda[i],0) || allPositions.includes(arrayIdCelda[i+10],0) || allPositions.includes(arrayIdCelda[i+20],0)
-                        || allPositions.includes(arrayIdCelda[i+30],0) || arrayIdCelda[i + 1] == null
-                        || arrayIdCelda[i + 20] == null || arrayIdCelda[i + 30] == null){
+                        for (let j = 0; j < positionsBattleShip.length; j++) {
+                            document.getElementById(positionsBattleShip[j]).setAttribute("style", "background-color: red;");
+                        }
+                    } else {
                         positionsBattleShip = [];
                         document.getElementById(typeShip).disabled = false;
-                    }else {
-                        positionsBattleShip = [];
-                        positionsBattleShip = [arrayIdCelda[i], arrayIdCelda[i + 10], arrayIdCelda[i+20], arrayIdCelda[i+30]];
                     }
                 }
+                allPositions = [];
+                allPositions = [].concat(positionsSubmarine, positionsDestroyer, positionsPatrol, positionsAircraft, positionsBattleShip);
             }
+            console.log(positionsDestroyer);
+            console.log(positionsSubmarine);
+            console.log(positionsPatrol);
+            console.log(positionsAircraft);
+            console.log(positionsBattleShip);
 
-            if (positionsBattleShip.length === 4) {
-                if (positionsBattleShip[0].split("")[1] === positionsBattleShip[1].split("")[1] && positionsBattleShip[0].split("")[1] === positionsBattleShip[2].split("")[1]
-                    && positionsBattleShip[0].split("")[1] === positionsBattleShip[3].split("")[1]){
-                    document.getElementById(typeShip).disabled = true;
 
-                    for (let j = 0; j < positionsBattleShip.length; j++) {
-                        document.getElementById(positionsBattleShip[j]).setAttribute("style", "background-color: red;");
-                    }
-                }else {
-                    positionsBattleShip = [];
-                    document.getElementById(typeShip).disabled = false;
-                }
+            if (allPositions.length === 17) {
+                let buttonStart = document.getElementById("start");
+                buttonStart.disabled = false;
+                let destroyer = {type: "destroyer", location: positionsDestroyer};
+                let submarine = {type: "submarine", location: positionsSubmarine};
+                let patrol = {type: "patrol", location: positionsPatrol};
+                let aircraft = {type: "aircraft", location: positionsAircraft};
+                let battlesShip = {type: "battlesShip", location: positionsBattleShip};
+                allShips = [destroyer, submarine, patrol, aircraft, battlesShip];
+                console.log(allShips);
             }
-            allPositions = [];
-            allPositions = [].concat(positionsSubmarine, positionsDestroyer, positionsPatrol, positionsAircraft, positionsBattleShip);
         }
-        console.log(positionsDestroyer);
-        console.log(positionsSubmarine);
-        console.log(positionsPatrol);
-        console.log(positionsAircraft);
-        console.log(positionsBattleShip);
-        console.log(allPositions);
     }
 }
+let allSalvos = [];
+let salvoLocations = [];
+let turn = 1;
+
+function implementSalvos(idCeldaSalvos) {
+    return function lazy() {
+        if (salvoLocations.length < 5 && !salvoLocations.includes(idCeldaSalvos)) {
+            document.getElementById(idCeldaSalvos).setAttribute("style", "background-color: brown;");
+            salvoLocations.push(idCeldaSalvos);
+            if (salvoLocations.length === 5) {
+                allSalvos = {turn: turn, location: salvoLocations};
+                turn++;
+            }
+            console.log(salvoLocations);
+            console.log(allSalvos);
+        }
+    }
+}
+
 function setShips() {
-    // const ships = [{
-    //     type: "destroyer",
-    //     location: ["A1","A2"]
-    // }];
-    fetch("/api/games/players/15/ships",{
-        method: "POST",
+
+    fetch("/api/games/players/" + idGp + "/ships", {
+
         credentials: 'include',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(
-            [{
-                type: "destroyer",
-                location: ["A1","A2"]
-            }]
-        )
+        method: "POST",
+        body: JSON.stringify(allShips)
 
-    }).then(function (data) {
-        //     return data.json();
-        //
-        // }).then(function (json) {
-        //console.log(gameId)
-        //window.open("http://localhost:8080/web/game.html?gp="+ json.gameId);
+    }).then(function () {
+        window.location.reload();
     }).catch(function (error) {
         console.log("Request failed:" + error.message);
     });
+
 }
+
+function setSalvos() {
+
+    fetch("/api/games/players/" + idGp + "/salvos", {
+
+        credentials: 'include',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        method: "POST",
+        body: JSON.stringify(allSalvos)
+
+    }).then(function () {
+        window.location.reload();
+        //document.getElementById("buttonsShips").style.display = "none";
+        allShips = dataShips;
+        salvoLocations = dataSalvos[1].salvos[0].location;
+    }).catch(function (error) {
+        console.log("Request failed:" + error.message);
+    });
+
+}
+if(dataShips.length === 5){
+    document.getElementById("buttonsShips").style.display = "none";
+}
+
 getData();
 createTable();
 createTableSalvos();

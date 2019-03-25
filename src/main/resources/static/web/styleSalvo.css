@@ -1,12 +1,12 @@
-.shipLocation{
+.shipLocation {
     background-color: blue;
 }
 
-.locationSalvo{
+.locationSalvo {
     background-color: pink;
 }
 
-#table1{
+#table1 {
     text-align: center;
 }
 
@@ -14,17 +14,18 @@
     text-align: center;
 }
 
-#infoPlayers{
+#infoPlayers {
     text-align: center;
 }
 
-.locationSalvoOpponent{
+.locationSalvoOpponent {
     background-color: orange;
 }
-.hit{
+
+.hit {
     background-color: darkmagenta;
 }
 
-.h1Tittle{
+.h1Tittle {
     text-align: center;
 }

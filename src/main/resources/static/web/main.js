@@ -31,37 +31,37 @@ function getData() {
 
 function insertPlay() {
 
-    for(var i=0 ; i < data.games.length ; i++){
+    for (var i = 0; i < data.games.length; i++) {
 
         var emailplayer = [];
-        for(var j=0 ; j < data.games[i].gamePlayers.length ; j++){
+        for (var j = 0; j < data.games[i].gamePlayers.length; j++) {
             // console.log("entra1")
-            var datePlays=data.games[i].create;
+            var datePlays = data.games[i].create;
             emailplayer.push(data.games[i].gamePlayers[j].player.email);
         }
 
         var newDate = new Date(datePlays);
-        var newLI=document.createElement("li");
-        newLI.setAttribute("id","li"+i);
+        var newLI = document.createElement("li");
+        newLI.setAttribute("id", "li" + i);
         var buttonGame = document.createElement("button");
         var divLi = document.createElement("div")
 
 
-        newLI.setAttribute("class","list-group-item row");
+        newLI.setAttribute("class", "list-group-item row");
 
 
-        divLi.innerHTML = newDate.getFullYear() + "/" + newDate.getMonth()+1 + "/" + newDate.getDate() + " | " +
-            newDate.getHours() + ":" + newDate.getMinutes() + ":"  + newDate.getSeconds()  + " |   " + emailplayer;
+        divLi.innerHTML = newDate.getFullYear() + "/" + newDate.getMonth() + 1 + "/" + newDate.getDate() + " | " +
+            newDate.getHours() + ":" + newDate.getMinutes() + ":" + newDate.getSeconds() + " |   " + emailplayer;
         document.getElementById("listPlay").appendChild(newLI);
-        document.getElementById("li"+i).appendChild(divLi);
+        document.getElementById("li" + i).appendChild(divLi);
 
-        var idDivButton=i;
+        var idDivButton = i;
 
-        var stringDiv=`<div id=${idDivButton}></div>`
+        var stringDiv = `<div id=${idDivButton}></div>`;
 
-        if(data.currentUser){
-            divLi.innerHTML = newDate.getFullYear() + "/" + newDate.getMonth()+1 + "/" + newDate.getDate() + " | " +
-                newDate.getHours() + ":" + newDate.getMinutes() + ":"  + newDate.getSeconds()  + " |   " + emailplayer;
+        if (data.currentUser) {
+            divLi.innerHTML = newDate.getFullYear() + "/" + newDate.getMonth() + 1 + "/" + newDate.getDate() + " | " +
+                newDate.getHours() + ":" + newDate.getMinutes() + ":" + newDate.getSeconds() + " |   " + emailplayer;
 
             newLI.innerHTML = stringDiv;
 
@@ -70,76 +70,75 @@ function insertPlay() {
             document.getElementById("listPlay").appendChild(newLI);
 
 
-            if(emailplayer.length==1 && emailplayer[0] != data.currentUser.email){
-                this.gpID=data.games[i].id;
-                console.log("entra en la funcion "+gpID)
-                var changeButton=document.getElementById(idDivButton);
+            if (emailplayer.length === 1 && emailplayer[0] !== data.currentUser.email) {
+                this.gpID = data.games[i].id;
+                console.log("entra en la función " + gpID);
+                var changeButton = document.getElementById(idDivButton);
 
                 changeButton.innerHTML = `<button onclick="joinGame(${gpID})" id="provisional" class="btn btn-default">JOIN</button>`;
                 var join = document.getElementById("provisional");
                 //join.addEventListener("click", () => joinGame(gpID));
-                join.setAttribute("id",gpID + "button");
+                join.setAttribute("id", gpID + "button");
                 var join2 = document.getElementById(gpID + "button");
 
             }
-            else if(emailplayer.length==2 && (emailplayer[0] == data.currentUser.email || emailplayer[1] ==
-                data.currentUser.email) || emailplayer.length==1 && emailplayer[0] == data.currentUser.email){
-                changeButton=document.getElementById(idDivButton);
+            else if (emailplayer.length === 2 && (emailplayer[0] === data.currentUser.email || emailplayer[1] ===
+                data.currentUser.email) || emailplayer.length === 1 && emailplayer[0] === data.currentUser.email) {
+                changeButton = document.getElementById(idDivButton);
 
-                changeButton.innerHTML="<a id='buttonGame2' type='button' class='btn btn-default'><p>BACK</p></a>"
-                var pButton = document.getElementById("buttonGame2");
-                pButton.setAttribute("id","link" + i);
-                pButton.setAttribute("target","_blank");
+                changeButton.innerHTML = "<a id='buttonGame2' type='button' class='btn btn-default'><p>BACK</p></a>"
+                let pButton = document.getElementById("buttonGame2");
+                pButton.setAttribute("id", "link" + i);
+                pButton.setAttribute("target", "_blank");
 
-                for(k=0;k<data.games[i].gamePlayers.length;k++){
-                    if(data.games[i].gamePlayers[k].player.email==data.currentUser.email)
-                        var insertLink = document.getElementById("link" + i).setAttribute("href","http://localhost:8080/web/game.html?gp=" +
+                for (k = 0; k < data.games[i].gamePlayers.length; k++) {
+                    if (data.games[i].gamePlayers[k].player.email === data.currentUser.email)
+                        document.getElementById("link" + i).setAttribute("href", "http://localhost:8080/web/game.html?gp=" +
                             data.games[i].gamePlayers[k].id)
                 }
-            };
+            }
         }
-        var emailplayer = [];
+
     }
 
 
 }
 
-function insertScores (){
-    var arrayThead=["Name","Total","Won","Lost","Tied"];
+function insertScores() {
+    var arrayThead = ["Name", "Total", "Won", "Lost", "Tied"];
     var newThead = document.createElement("thead");
     var newTbody = document.createElement("tbody");
-    newTbody.setAttribute("id","tbodyScore");
+    newTbody.setAttribute("id", "tbodyScore");
     newThead.setAttribute("id", "theadScore");
     document.getElementById("table1").appendChild(newThead);
     document.getElementById("table1").appendChild(newTbody);
 
-    for(var i=0 ; i < arrayThead.length ; i++){
+    for (var i = 0; i < arrayThead.length; i++) {
 
         var newTd = document.createElement("td");
-        newTd.innerHTML=arrayThead[i];
+        newTd.innerHTML = arrayThead[i];
         newThead.appendChild(newTd);
     }
 
 
-
-    for(var i=0 ; i < data.leaderBoard.length ; i++){
-        if(data.leaderBoard[i].player!="") {
+    for (var i = 0; i < data.leaderBoard.length; i++) {
+        if (data.leaderBoard[i].player != "") {
             var newTr1 = document.createElement("tr");
 
 
             newTr1.setAttribute("id", data.leaderBoard[i].player);
             newTbody.appendChild(newTr1);
-            for(var j = 0;j<data.leaderBoard.length;j++){
+            for (var j = 0; j < data.leaderBoard.length; j++) {
                 var newtd2 = document.createElement("td");
                 var newtd3 = document.createElement("td");
                 var newtd4 = document.createElement("td");
                 var newtd5 = document.createElement("td");
                 var newtd6 = document.createElement("td");
-                newtd2.innerHTML=data.leaderBoard[i].player;
-                newtd3.innerHTML=data.leaderBoard[i].total;
-                newtd4.innerHTML=data.leaderBoard[i].won;
-                newtd5.innerHTML=data.leaderBoard[i].lost;
-                newtd6.innerHTML=data.leaderBoard[i].tied;
+                newtd2.innerHTML = data.leaderBoard[i].player;
+                newtd3.innerHTML = data.leaderBoard[i].total;
+                newtd4.innerHTML = data.leaderBoard[i].won;
+                newtd5.innerHTML = data.leaderBoard[i].lost;
+                newtd6.innerHTML = data.leaderBoard[i].tied;
             }
             newTr1.appendChild(newtd2);
             newTr1.appendChild(newtd3);
@@ -151,11 +150,11 @@ function insertScores (){
 }
 
 
-function logIn_out(url){
-    var userName=document.getElementById("inputName").value;
-    var pwd=document.getElementById("inputpwd").value;
+function logIn_out(url) {
+    var userName = document.getElementById("inputName").value;
+    var pwd = document.getElementById("inputpwd").value;
 
-    if(url=='/api/login'){
+    if (url == '/api/login') {
 
         fetch(url, {
             credentials: 'include',
@@ -164,7 +163,7 @@ function logIn_out(url){
             },
             method: 'POST',
 
-            body: 'user='+ userName + '&password='+ pwd,
+            body: 'user=' + userName + '&password=' + pwd,
         }).then(function (data) {
             console.log('Request success: ', data);
             //showAndHide();
@@ -175,7 +174,7 @@ function logIn_out(url){
                 console.log('Request failure: ', error);
             });
 
-    }else if(url=='/api/logout'){
+    } else if (url === '/api/logout') {
 
         fetch(url, {
             credentials: 'include',
@@ -204,10 +203,10 @@ function logIn_out(url){
     }
 }
 
-function register(){
+function register() {
 
-    var userName=document.getElementById("inputName").value;
-    var pwd=document.getElementById("inputpwd").value;
+    var userName = document.getElementById("inputName").value;
+    var pwd = document.getElementById("inputpwd").value;
     console.log(userName);
     console.log(pwd);
     fetch("/api/players", {
@@ -233,12 +232,12 @@ function register(){
         .catch(function (error) {
             console.log('Request failure: ', error);
         });
-    userName.innerHTML="";
-    pwd.innerHTML="";
+    userName.innerHTML = "";
+    pwd.innerHTML = "";
 }
 
-function showAndHide(){
-    if(data.currentUser) {
+function showAndHide() {
+    if (data.currentUser) {
         document.getElementById("out").style.display = "block";
         document.getElementById("in").style.display = "none";
         document.getElementById("register").style.display = "none";
@@ -247,7 +246,7 @@ function showAndHide(){
     }
 }
 
-function createGame(){
+function createGame() {
 
     fetch("/api/games", {
         credentials: 'include',
@@ -260,11 +259,11 @@ function createGame(){
     }).then(function (data) {
         console.log('Request success: ', data);
         window.location.reload();
-        return data.json()
+        return data.json();
 
     }).then(function (json) {
-        console.log(json)
-        window.open("http://localhost:8080/web/game.html?gp="+ json.gpId);
+        console.log(json);
+        window.open("http://localhost:8080/web/game.html?gp=" + json.gpId);
     })
         .catch(function (error) {
             console.log('Request failure: ', error);
@@ -274,15 +273,15 @@ function createGame(){
 
 function joinGame(gameId) {
     //alert(gameId)
-    fetch("/api/game/" + gameId + "/players",{
+    fetch("/api/game/" + gameId + "/players", {
         method: "POST",
 
     }).then(function (data) {
         return data.json();
 
     }).then(function (json) {
-        console.log(gameId)
-        window.open("http://localhost:8080/web/game.html?gp="+ json.gameId);
+        console.log(gameId);
+        window.open("http://localhost:8080/web/game.html?gp=" + json.gameId);
     }).catch(function (error) {
         console.log("Request failed:" + error.message);
     });

@@ -6,7 +6,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
-    <link href="styleSalvo.css" rel="stylesheet" />
+    <link href="styleSalvo.css" rel="stylesheet"/>
     <meta charset="UTF-8">
     <title> Ship Locations!</title>
 </head>
@@ -17,7 +17,7 @@
 
     </div>
 
-    <div class="shipButton row">
+    <div id="buttonsShips" class="shipButton row">
 
         <div class="dropdownDestroyer col-lg-2">
             <button id="destroyer" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
@@ -34,7 +34,8 @@
                 Patol Boat
             </button>
             <div class="dropdown-menu">
-                <a onclick="implementShips('patrolBoat','horizontal')" class="dropdown-item" type="button">Horizontal</a>
+                <a onclick="implementShips('patrolBoat','horizontal')" class="dropdown-item"
+                   type="button">Horizontal</a>
                 <a onclick="implementShips('patrolBoat','vertical')" class="dropdown-item" type="button">Vertical</a>
             </div>
         </div>
@@ -55,18 +56,32 @@
             </button>
             <div class="dropdown-menu">
                 <a onclick="implementShips('AircraftCarrier','horizontal')" class="dropdown-item" type="button">Horizontal</a>
-                <a onclick="implementShips('AircraftCarrier','vertical')" class="dropdown-item" type="button">Vertical</a>
+                <a onclick="implementShips('AircraftCarrier','vertical')" class="dropdown-item"
+                   type="button">Vertical</a>
             </div>
         </div>
 
         <div class="dropdownBattleship col-lg-2">
-            <button id="Battleship"  type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+            <button id="Battleship" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
                 Battleship
             </button>
             <div class="dropdown-menu">
-                <a onclick="implementShips('Battleship','horizontal')" class="dropdown-item" type="button">Horizontal</a>
+                <a onclick="implementShips('Battleship','horizontal')" class="dropdown-item"
+                   type="button">Horizontal</a>
                 <a onclick="implementShips('Battleship','vertical')" class="dropdown-item" type="button">Vertical</a>
             </div>
+        </div>
+        <div class="divButtonStart col-lg-2">
+            <button id="start" type="button" class="btn btn-primary" data-toggle="" onclick="setShips()" disabled>
+                START
+            </button>
+        </div>
+    </div>
+    <div id="divButtonSalvos" style="display: none">
+        <div class="divButtonStart col-lg-2">
+            <button id="sendSalvos" type="button" class="btn btn-primary" data-toggle="" onclick="setSalvos()">
+              SHOOT SALVOS
+            </button>
         </div>
     </div>
     <div id="table" class="container">
