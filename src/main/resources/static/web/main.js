@@ -100,8 +100,6 @@ function insertPlay() {
         }
 
     }
-
-
 }
 
 function insertScores() {
@@ -205,8 +203,8 @@ function logIn_out(url) {
 
 function register() {
 
-    var userName = document.getElementById("inputName").value;
-    var pwd = document.getElementById("inputpwd").value;
+    let userName = document.getElementById("inputName").value;
+    let pwd = document.getElementById("inputpwd").value;
     console.log(userName);
     console.log(pwd);
     fetch("/api/players", {
@@ -272,7 +270,7 @@ function createGame() {
 }
 
 function joinGame(gameId) {
-    //alert(gameId)
+    //alert(gameId);
     fetch("/api/game/" + gameId + "/players", {
         method: "POST",
 

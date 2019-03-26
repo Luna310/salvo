@@ -5,7 +5,8 @@ let typeShip = "1";
 let orientationShip = "2";
 let arrayIdCelda = [];
 let allShips;
-let dataShips=[];
+let dataShips = [];
+
 function getData() {
     fetch("/api/game_view/" + getParameterByName("gp"), {
         method: "GET",
@@ -35,7 +36,7 @@ function getData() {
 }
 
 function createTable() {
-
+    console.log("createtabla");
     let newThead = document.createElement("thead");
     newThead.setAttribute("id", "numberRow");
 
@@ -85,14 +86,15 @@ function createTable() {
 }
 
 function getColorLocation() {
+    console.log("getlocation");
 
-    var locations = [];
-    for (var i = 0; i < dataShips.length; i++) {
-        for (var j = 0; j < dataShips[i].location.length; j++) {
+    let locations = [];
+    for (let i = 0; i < dataShips.length; i++) {
+        for (let j = 0; j < dataShips[i].location.length; j++) {
             locations.push(dataShips[i].location[j])
         }
     }
-    for (var i = 0; i < locations.length; i++) {
+    for (let i = 0; i < locations.length; i++) {
         document.getElementById(locations[i]).setAttribute("class", "shipLocation");
     }
     this.locations = locations;
@@ -100,6 +102,7 @@ function getColorLocation() {
 }
 
 function createTableSalvos() {
+    console.log("createSalvos");
     var newThead = document.createElement("thead");
     newThead.setAttribute("id", "numberRowSalvo");
 
@@ -149,7 +152,7 @@ function createTableSalvos() {
 }
 
 function getColorLocationSalvo() {
-
+    console.log("getcolorlocation");
     var currentTurn = [];
     var opponentTurn = [];
     var currentSalvo = [];
@@ -160,7 +163,8 @@ function getColorLocationSalvo() {
         for (var j = 0; j < dataSalvos[i].salvos.length; j++) {
 
             for (var k = 0; k < dataSalvos[i].salvos[j].location.length; k++) {
-                if (dataGamePlayer[i].id == idGp) {
+                if (dataGamePlayer[i].id === idGp) {
+                    console.log("getcolorlocation1");
                     currentTurn.push(dataSalvos[i].salvos[j].turn);
                     currentSalvo.push(dataSalvos[i].salvos[j].location[k]);
                 } else {
@@ -174,24 +178,24 @@ function getColorLocationSalvo() {
     // console.log(currentTurn);
     // console.log(opponetSalvo);
     // console.log(opponentTurn);
-    for (var i = 0; i < currentSalvo.length; i++) {
-        var salvo = document.getElementById(currentSalvo[i] + "s");
+    for (let i = 0; i < currentSalvo.length; i++) {
+        let salvo = document.getElementById(currentSalvo[i] + "s");
         salvo.setAttribute("class", "locationSalvo");
         salvo.innerHTML = currentTurn[i];
     }
     var hitLocation = [];
-    for (var i = 0; i < opponetSalvo.length; i++) {
-        for (var j = 0; j < this.locations.length; j++) {
-            if (opponetSalvo[i] == this.locations[j]) {
+    for (let i = 0; i < opponetSalvo.length; i++) {
+        for (let j = 0; j < this.locations.length; j++) {
+            if (opponetSalvo[i] === this.locations[j]) {
                 hitLocation.push(opponetSalvo[i])
             }
-            var salvo = document.getElementById(opponetSalvo[i]);
+            let salvo = document.getElementById(opponetSalvo[i]);
             salvo.setAttribute("class", "locationSalvoOpponent");
             salvo.innerHTML = opponentTurn[i];
         }
     }
-    for (var i = 0; i < hitLocation.length; i++) {
-        var hit = document.getElementById(hitLocation[i]);
+    for (let i = 0; i < hitLocation.length; i++) {
+        let hit = document.getElementById(hitLocation[i]);
         hit.setAttribute("class", "hit");
     }
 
@@ -206,15 +210,16 @@ function getParameterByName(name) {
 }
 
 function showInfoPlayer() {
-    var name1 = "";
-    var name2 = "";
+    console.log("infoplayer");
+    let name1 = "";
+    let name2 = "";
 
-    if (idGp == data.game.gamePlayers[0].id && data.game.gamePlayers[1] != null) {
+    if (idGp === data.game.gamePlayers[0].id && data.game.gamePlayers[1] != null) {
         //console.log("entra")
         name1 = data.game.gamePlayers[0].player.email;
         name2 = data.game.gamePlayers[1].player.email;
     }
-    else if (idGp != data.game.gamePlayers[0].id) {
+    else if (idGp !== data.game.gamePlayers[0].id) {
         //console.log("entra2")
         name1 = data.game.gamePlayers[1].player.email;
         name2 = data.game.gamePlayers[0].player.email;
@@ -226,13 +231,14 @@ function showInfoPlayer() {
     // console.log(name1);
     // console.log(name2);
     // console.log(data.game.gamePlayers[0].player.email);
-    var newH2 = document.createElement("h2");
+    let newH2 = document.createElement("h2");
     document.getElementById("infoPlayers").appendChild(newH2);
     newH2.innerHTML = name1 + " VS " + name2
 
 }
 
 function implementShips(type, orientation) {
+    console.log("implementShip");
     typeShip = type;
     orientationShip = orientation;
     console.log(typeShip);
@@ -246,9 +252,10 @@ let positionsPatrol = [];
 let positionsAircraft = [];
 let positionsBattleShip = [];
 let allPositions = [];
-console.log(dataShips.length + "IIIIIIII")
-if(dataShips.length < 5) {
-    console.log(dataShips.length + "IIIIIIII")
+console.log(dataShips.length + "IIIIIIII");
+if (dataShips.length < 5) {
+    console.log(dataShips.length + "dataShips<5");
+
     function implementShips2(idCelda) {
 
         return function lazy() {
@@ -643,21 +650,24 @@ if(dataShips.length < 5) {
 }
 let allSalvos = [];
 let salvoLocations = [];
-let turn = 1;
 
 function implementSalvos(idCeldaSalvos) {
+    let turn = 1;
+    console.log("implementSalvos");
     return function lazy() {
+        //let checkStyle = document.getElementById(idCeldaSalvos).style;
+       // console.log(checkStyle);
         if (salvoLocations.length < 5 && !salvoLocations.includes(idCeldaSalvos)) {
             document.getElementById(idCeldaSalvos).setAttribute("style", "background-color: brown;");
             salvoLocations.push(idCeldaSalvos);
             if (salvoLocations.length === 5) {
                 allSalvos = {turn: turn, location: salvoLocations};
-                turn++;
-            }
+                }
             console.log(salvoLocations);
-            console.log(allSalvos);
+            //console.log(allSalvos);
         }
     }
+
 }
 
 function setShips() {
@@ -695,15 +705,15 @@ function setSalvos() {
     }).then(function () {
         window.location.reload();
         //document.getElementById("buttonsShips").style.display = "none";
-        allShips = dataShips;
-        salvoLocations = dataSalvos[1].salvos[0].location;
     }).catch(function (error) {
         console.log("Request failed:" + error.message);
     });
 
 }
-if(dataShips.length === 5){
+
+if (dataShips.length === 5) {
     document.getElementById("buttonsShips").style.display = "none";
+    console.log(dataShips.length)
 }
 
 getData();
