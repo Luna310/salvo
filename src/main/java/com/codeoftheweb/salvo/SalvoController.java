@@ -50,7 +50,10 @@ public class SalvoController {
         Map<String, Object> dto = new LinkedHashMap<String, Object>();
         dto.put("id", game.getId());
         dto.put("create", game.getDate());
-        dto.put("gamePlayers", game.getGamePlayers().stream().map(gp -> gamePlayerMapDTO(gp)).collect(Collectors.toList()));
+        dto.put("gamePlayers", game.getGamePlayers()
+                .stream()
+                .map(gp -> gamePlayerMapDTO(gp))
+                .collect(Collectors.toList()));
         return dto;
     }
 
@@ -72,7 +75,9 @@ public class SalvoController {
 
     public Map<String, Object> salvosDTO(Set<Salvo> salvos) {
         Map<String, Object> dto = new LinkedHashMap<String, Object>();
-        dto.put("salvos", salvos.stream().map(sv -> salvoDTO(sv)).collect(Collectors.toList()));
+        dto.put("salvos", salvos.stream()
+                .map(sv -> salvoDTO(sv))
+                .collect(Collectors.toList()));
         return dto;
     }
 

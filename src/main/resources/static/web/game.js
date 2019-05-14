@@ -6,9 +6,14 @@ let orientationShip = "2";
 let arrayIdCelda = [];
 let allShips;
 let dataShips = [];
+console.log(idGp);
+
 
 function getData() {
-    fetch("/api/game_view/" + getParameterByName("gp"), {
+    if (idGp !== getParameterByName("gp")) {
+        alert("ni de coña")
+    }
+    fetch("/api/game_view/" + idGp, {
         method: "GET",
 
     }).then(function (response) {
@@ -86,7 +91,6 @@ function createTable() {
 }
 
 function getColorLocation() {
-    console.log("getlocation");
 
     let locations = [];
     for (let i = 0; i < dataShips.length; i++) {
@@ -164,7 +168,6 @@ function getColorLocationSalvo() {
 
             for (var k = 0; k < dataSalvos[i].salvos[j].location.length; k++) {
                 if (dataGamePlayer[i].id === idGp) {
-                    console.log("getcolorlocation1");
                     currentTurn.push(dataSalvos[i].salvos[j].turn);
                     currentSalvo.push(dataSalvos[i].salvos[j].location[k]);
                 } else {
@@ -174,10 +177,7 @@ function getColorLocationSalvo() {
             }
         }
     }
-    // console.log(currentSalvo);
-    // console.log(currentTurn);
-    // console.log(opponetSalvo);
-    // console.log(opponentTurn);
+
     for (let i = 0; i < currentSalvo.length; i++) {
         let salvo = document.getElementById(currentSalvo[i] + "s");
         salvo.setAttribute("class", "locationSalvo");
@@ -208,6 +208,7 @@ function getParameterByName(name) {
     var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
     return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
 }
+
 
 function showInfoPlayer() {
     console.log("infoplayer");
@@ -650,24 +651,49 @@ if (dataShips.length < 5) {
 }
 let allSalvos = [];
 let salvoLocations = [];
+let checkSalvos = [];
 
 function implementSalvos(idCeldaSalvos) {
-    let turn = 1;
-    console.log("implementSalvos");
-    return function lazy() {
-        //let checkStyle = document.getElementById(idCeldaSalvos).style;
-       // console.log(checkStyle);
-        if (salvoLocations.length < 5 && !salvoLocations.includes(idCeldaSalvos)) {
-            document.getElementById(idCeldaSalvos).setAttribute("style", "background-color: brown;");
-            salvoLocations.push(idCeldaSalvos);
-            if (salvoLocations.length === 5) {
-                allSalvos = {turn: turn, location: salvoLocations};
-                }
-            console.log(salvoLocations);
-            //console.log(allSalvos);
-        }
-    }
 
+    return function lazy() {
+
+        for (var i = 0; i < dataSalvos.length; i++) {
+            for (let j = 0; j < dataSalvos[i].salvos.length; j++) {
+                for (let k = 0; k < dataSalvos[i].salvos[j].location.length; k++) {
+                    if (dataGamePlayer[i].id === idGp && !checkSalvos.includes(dataSalvos[i].salvos[j].location[k])) {
+                        checkSalvos.push(dataSalvos[i].salvos[j].location[k]);
+                    } else {
+                        if(!checkSalvos.includes(dataSalvos[i].salvos[j].location[k]))
+                        checkSalvos.push(dataSalvos[i].salvos[j].location[k]);
+                    }
+                }
+            }
+        }
+
+        if (dataShips.length === 5 && dataSalvos[0].salvos.length < 5 && dataSalvos[1].salvos.length < 5) {
+            if (salvoLocations.length < 5 && !salvoLocations.includes(idCeldaSalvos) && !checkSalvos.includes(idCeldaSalvos)) {
+                document.getElementById(idCeldaSalvos).setAttribute("style", "background-color: brown;");
+                salvoLocations.push(idCeldaSalvos);
+
+                if (salvoLocations.length === 5) {
+                    let turn = 1;
+
+                    if (dataSalvos[0].salvos.length === 0 && dataSalvos[1].salvos.length > 0) {
+                        turn = dataSalvos[1].salvos.length + 1
+                    } else {
+                        turn = dataSalvos[0].salvos.length + 1
+                    }
+                    allSalvos = {turn: turn, location: salvoLocations};
+                }
+
+            }
+        }
+        if (salvoLocations.length === 5) {
+            let buttonSendSalvos = document.getElementById("sendSalvos");
+            buttonSendSalvos.disabled = false;
+        }
+        console.log(checkSalvos);
+    }
 }
 
 function setShips() {
@@ -691,7 +717,6 @@ function setShips() {
 }
 
 function setSalvos() {
-
     fetch("/api/games/players/" + idGp + "/salvos", {
 
         credentials: 'include',
@@ -708,7 +733,6 @@ function setSalvos() {
     }).catch(function (error) {
         console.log("Request failed:" + error.message);
     });
-
 }
 
 if (dataShips.length === 5) {

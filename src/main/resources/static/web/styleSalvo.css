@@ -1,3 +1,21 @@
+body{
+    background-image: url("imgSalvo/caratula.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.logo{
+    text-align: -webkit-center;
+    margin-bottom: 20px;
+}
+
+.listGame{
+    background-color: transparent;
+    color: black;
+    font-size: 22px;
+    font-style: italic;
+    font-weight: bold;
+}
 .shipLocation {
     background-color: blue;
 }

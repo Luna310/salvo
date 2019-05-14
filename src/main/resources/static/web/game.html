@@ -6,15 +6,23 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
-    <link href="styleSalvo.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="styleSalvo.css">
     <meta charset="UTF-8">
     <title> Ship Locations!</title>
 </head>
 <body>
 <div class="container">
-    <h1> Ship Locations!</h1>
+    
     <div id="infoPlayers">
 
+    </div>
+
+    <div id="divButtonSalvos" style="display: none">
+        <div class="divButtonStart">
+            <button id="sendSalvos" type="button" class="btn btn-primary" data-toggle="" onclick="setSalvos()" DISABLED>
+                SHOOT SALVOS
+            </button>
+        </div>
     </div>
 
     <div id="buttonsShips" class="shipButton row">
@@ -77,26 +85,21 @@
             </button>
         </div>
     </div>
+    <div class="row">
+        <div id="table" class="container col-lg-6">
+            <table id="table1" class="table table-bordered">
 
-    <div id="table" class="container">
-        <table id="table1" class="table table-bordered">
-
-        </table>
-    </div>
-
-    <div id="divButtonSalvos" style="display: none">
-        <div class="divButtonStart col-lg-2">
-            <button id="sendSalvos" type="button" class="btn btn-primary" data-toggle="" onclick="setSalvos()">
-                SHOOT SALVOS
-            </button>
+            </table>
         </div>
+
+        <div id="tableSalvos" class="container col-lg-6">
+
+            <table id="tableSalvo" class="table table-bordered"></table>
+        </div>
+        <script src="game.js"></script>
     </div>
 
-    <div id="tableSalvos" class="container">
 
-        <table id="tableSalvo" class="table table-bordered"></table>
-    </div>
-    <script src="game.js"></script>
 </div>
 </body>
 </html>

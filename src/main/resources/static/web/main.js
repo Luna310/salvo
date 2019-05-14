@@ -35,7 +35,6 @@ function insertPlay() {
 
         var emailplayer = [];
         for (var j = 0; j < data.games[i].gamePlayers.length; j++) {
-            // console.log("entra1")
             var datePlays = data.games[i].create;
             emailplayer.push(data.games[i].gamePlayers[j].player.email);
         }
@@ -43,11 +42,12 @@ function insertPlay() {
         var newDate = new Date(datePlays);
         var newLI = document.createElement("li");
         newLI.setAttribute("id", "li" + i);
+
         var buttonGame = document.createElement("button");
         var divLi = document.createElement("div")
 
 
-        newLI.setAttribute("class", "list-group-item row");
+        newLI.setAttribute("class", "list-group-item row listGame");
 
 
         divLi.innerHTML = newDate.getFullYear() + "/" + newDate.getMonth() + 1 + "/" + newDate.getDate() + " | " +
@@ -279,7 +279,11 @@ function joinGame(gameId) {
 
     }).then(function (json) {
         console.log(gameId);
-        window.open("http://localhost:8080/web/game.html?gp=" + json.gameId);
+        if(data!==undefined) {
+            window.open("http://localhost:8080/web/game.html?gp=" + json.gameId);
+        }else{
+            alert("No puede ver esta página")
+        }
     }).catch(function (error) {
         console.log("Request failed:" + error.message);
     });
